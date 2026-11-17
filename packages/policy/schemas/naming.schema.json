@@ -1,0 +1,46 @@
+{
+  "$id": "https://sapdx.local/schemas/naming.schema.json",
+  "type": "object",
+  "required": ["version", "cap", "abap"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "cap": {
+      "type": "object",
+      "required": ["npmScope", "namespacePattern", "servicePattern", "entityPattern", "elementPattern"],
+      "additionalProperties": false,
+      "properties": {
+        "npmScope": { "type": "string", "pattern": "^@[a-z0-9][a-z0-9._-]*$" },
+        "namespacePattern": { "type": "string", "format": "regex" },
+        "servicePattern": { "type": "string", "format": "regex" },
+        "entityPattern": { "type": "string", "format": "regex" },
+        "elementPattern": { "type": "string", "format": "regex" }
+      }
+    },
+    "abap": {
+      "type": "object",
+      "required": ["prefix", "packagePattern", "rap"],
+      "additionalProperties": false,
+      "properties": {
+        "prefix": { "type": "string", "pattern": "^(Z|Y|/[A-Z0-9]{1,8}/)$" },
+        "packagePattern": { "type": "string", "format": "regex" },
+        "rap": {
+          "type": "object",
+          "required": [
+            "table",
+            "draftTable",
+            "baseView",
+            "projectionView",
+            "accessControl",
+            "projectionAccessControl",
+            "behaviorPool",
+            "serviceDefinition",
+            "serviceBinding",
+            "unitTestClass"
+          ],
+          "additionalProperties": { "type": "string", "pattern": "\\{ENTITY\\}" }
+        }
+      }
+    }
+  }
+}

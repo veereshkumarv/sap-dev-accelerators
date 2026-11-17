@@ -1,0 +1,33 @@
+{
+  "name": "@sapdx/policy",
+  "version": "0.1.0",
+  "description": "Central policy engine: rule catalog, time-boxed exemptions, naming conventions and the SARIF quality gate.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "sapdx-gate": "./bin/sapdx-gate.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "schemas"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=90 --test-coverage-include=src/** test/"
+  },
+  "dependencies": {
+    "@sapdx/findings": "0.1.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "picomatch": "4.0.7",
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@types/picomatch": "4.0.3"
+  }
+}

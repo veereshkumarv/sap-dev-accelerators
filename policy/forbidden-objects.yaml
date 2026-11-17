@@ -1,0 +1,26 @@
+# Objects that must not be used directly, with their released successor.
+# Unreleased-API detection in general comes from SAP's Cloudification Repository
+# (github.com/SAP/abap-atc-cr-cv-s4hc); this list adds organisation-specific bans
+# and gives developers the successor to use.
+
+version: 1
+tables:
+  - { name: VBAK, successor: I_SalesDocument }
+  - { name: VBAP, successor: I_SalesDocumentItem }
+  - { name: KNA1, successor: I_Customer }
+  - { name: LFA1, successor: I_Supplier }
+  - { name: MARA, successor: I_Product }
+  - { name: MAKT, successor: I_ProductDescription }
+  - { name: BUT000, successor: I_BusinessPartner }
+  - { name: T001, successor: I_CompanyCode }
+  - { name: BKPF, successor: I_JournalEntry }
+  - { name: BSEG, successor: I_OperationalAcctgDocItem }
+functionModules:
+  - { name: BAPI_SALESORDER_CREATEFROMDAT2, successor: "RAP BO I_SalesOrderTP via EML" }
+  - { name: BAPI_TRANSACTION_COMMIT, successor: "COMMIT ENTITIES (RAP / EML)" }
+  - { name: POPUP_TO_CONFIRM, successor: "Fiori UI confirmation; no dialogs in backend logic" }
+  - { name: GUI_UPLOAD, successor: "Fiori upload / attachment service" }
+  - { name: GUI_DOWNLOAD, successor: "Fiori download / attachment service" }
+classes:
+  - { name: CL_GUI_FRONTEND_SERVICES, successor: "Fiori UI; no SAP GUI frontend access" }
+  - { name: CL_GUI_ALV_GRID, successor: "Fiori elements list report" }

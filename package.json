@@ -1,0 +1,26 @@
+{
+  "name": "sap-dev-accelerators",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Golden-path generators, clean-core gates, OData test generation, S/4 mocks and release-readiness checks for SAP RAP/CAP development.",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "npm test --workspaces --if-present",
+    "check": "npm run lint && npm run typecheck && npm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.5",
+    "eslint": "10.15.0",
+    "globals": "17.14.0",
+    "typescript": "5.9.3"
+  }
+}

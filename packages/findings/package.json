@@ -1,0 +1,18 @@
+{
+  "name": "@sapdx/findings",
+  "version": "0.1.0",
+  "description": "Common finding model, severity scale, SARIF 2.1.0 conversion and baseline gate shared by all accelerators.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=90 --test-coverage-include=src/** test/"
+  }
+}

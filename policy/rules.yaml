@@ -1,0 +1,193 @@
+# Central rule catalog. The policy engine is the source of truth for severity:
+# tools propose a severity, the catalog decides. Changing this file requires
+# architect approval (see CODEOWNERS).
+#
+# Severity model
+#   blocker  - modification, severe security issue, unreleased dependency without exemption
+#   critical - missing authorization, unsafe update, incompatible API change
+#   major    - performance risk, missing tests, poor error handling
+#   minor    - naming, documentation, maintainability
+#
+# baselineable: false  -> finding blocks even if it existed before (cannot be grandfathered).
+# id ending in "*"     -> wildcard family (e.g. built-in abaplint rules).
+
+version: 1
+rules:
+  # ---------------------------------------------------------------- policy engine
+  - id: POL-EXEMPT-001
+    title: Exemption expired
+    severity: blocker
+    baselineable: false
+    tool: policy
+    description: An exemption passed its expiry date. Remediate the finding or renew the exemption with architect approval.
+  - id: POL-EXEMPT-002
+    title: Exemption no longer used
+    severity: minor
+    tool: policy
+    description: No finding matches this exemption any more. Remove it from exemptions.yaml.
+
+  # ---------------------------------------------------------------- CAP
+  - id: CAP-AUTH-001
+    title: Service exposed without authorization
+    severity: critical
+    tool: cap-policy-lint
+    description: Every service must declare @requires or @restrict. Use @requires:'any' only with an exemption.
+  - id: CAP-AUTH-002
+    title: Writable entity without access restriction
+    severity: critical
+    tool: cap-policy-lint
+    description: Entities that accept CREATE/UPDATE/DELETE must be covered by @restrict, @requires on the service, or be @readonly.
+  - id: CAP-SEC-001
+    title: Hard-coded secret
+    severity: blocker
+    baselineable: false
+    tool: cap-policy-lint
+    description: Credentials, tokens or client secrets in source. Use service bindings, destinations or credential store.
+  - id: CAP-CFG-001
+    title: Hard-coded URL
+    severity: major
+    tool: cap-policy-lint
+    description: Endpoints belong in destinations / cds.requires configuration, not in handler code.
+  - id: CAP-CFG-002
+    title: Hard-coded organisational value
+    severity: major
+    tool: cap-policy-lint
+    description: Company codes, plants, sales organisations etc. must come from configuration or master data.
+  - id: CAP-REMOTE-001
+    title: Remote service without destination
+    severity: major
+    tool: cap-policy-lint
+    description: Production profile of a remote service must use a destination (credentials.destination), never inline URLs or users.
+  - id: CAP-PERF-001
+    title: Unbounded query
+    severity: major
+    tool: cap-policy-lint
+    description: SELECT without where/limit/one on a persistent entity in handler code.
+  - id: CAP-TEST-001
+    title: Custom operation without test
+    severity: major
+    tool: cap-policy-lint
+    description: Every action/function must be referenced by at least one test.
+  - id: CAP-TEST-002
+    title: No negative authorization test
+    severity: major
+    tool: cap-policy-lint
+    description: Project must contain at least one test asserting 401/403 for an unauthorized user.
+  - id: CAP-LOG-001
+    title: console logging
+    severity: minor
+    tool: cap-policy-lint
+    description: Use cds.log() for structured, correlation-aware logging.
+  - id: CAP-API-001
+    title: API ownership metadata missing
+    severity: minor
+    tool: cap-policy-lint
+    description: catalog-info.yaml must declare owner, lifecycle and API version.
+  - id: CAP-NAME-001
+    title: Naming convention violated
+    severity: minor
+    tool: cap-policy-lint
+    description: Namespace, service and entity names must follow policy/naming.yaml.
+
+  # ---------------------------------------------------------------- ABAP / clean core
+  - id: ABAP-CC-001
+    title: Unreleased SAP object used
+    severity: blocker
+    tool: abap-policy-lint
+    description: Only released APIs (C1 contract) may be used. Use the documented successor or request an exemption.
+  - id: ABAP-CC-002
+    title: Modification or classic enhancement of SAP object
+    severity: blocker
+    baselineable: false
+    tool: abap-policy-lint
+    description: Modifications and implicit/explicit classic enhancements are not allowed. Use released BAdIs or side-by-side extension.
+  - id: ABAP-CC-003
+    title: Direct access to SAP table with released successor
+    severity: critical
+    tool: abap-policy-lint
+    description: Read through the released CDS view listed in forbidden-objects.yaml.
+  - id: ABAP-CC-004
+    title: Forbidden function module or class
+    severity: critical
+    tool: abap-policy-lint
+    description: Object listed in forbidden-objects.yaml; use the named successor.
+  - id: ABAP-LANG-001
+    title: Not ABAP Cloud language version
+    severity: blocker
+    tool: abap-policy-lint
+    description: New development must compile under ABAP for Cloud Development (statement not permitted in ABAP Cloud).
+  - id: ABAP-SEC-001
+    title: Missing authorization control
+    severity: critical
+    tool: abap-policy-lint
+    description: CDS view entities need @AccessControl.authorizationCheck:#CHECK with a DCL; RAP behavior definitions need an authorization master.
+  - id: ABAP-PERF-001
+    title: Database access inside loop
+    severity: major
+    tool: abap-policy-lint
+    description: Use FOR ALL ENTRIES, joins or CDS associations instead of SELECT in LOOP/DO/WHILE.
+  - id: ABAP-PERF-002
+    title: Unbounded database read
+    severity: major
+    tool: abap-policy-lint
+    description: SELECT without WHERE and without UP TO n ROWS.
+  - id: ABAP-DB-001
+    title: Cross-client database access
+    severity: major
+    tool: abap-policy-lint
+    description: CLIENT SPECIFIED / USING ALL CLIENTS / USING CLIENT bypass automatic client handling.
+  - id: ABAP-CFG-001
+    title: Hard-coded organisational value or URL
+    severity: major
+    tool: abap-policy-lint
+    description: Company code, plant, sales organisation literals or URLs in code. Use configuration or communication arrangements.
+  - id: ABAP-TEST-001
+    title: Behavior implementation without ABAP Unit tests
+    severity: major
+    tool: abap-policy-lint
+    description: Behavior pools must contain local test classes (FOR TESTING), including at least one negative test.
+  - id: ABAP-LOG-001
+    title: Application log not used
+    severity: minor
+    tool: abap-policy-lint
+    description: Behavior pools should write business errors to the application log (CL_BALI_LOG).
+  - id: ABAP-NAME-001
+    title: Naming convention violated
+    severity: minor
+    tool: abap-policy-lint
+    description: Object names must follow policy/naming.yaml.
+  - id: ABAP-LINT-*
+    title: abaplint built-in rule
+    severity: minor
+    tool: abap-policy-lint
+    description: Findings from built-in abaplint rules configured in the shared abaplint profile.
+
+  # ---------------------------------------------------------------- OData contract
+  - id: ODATA-BRK-001
+    title: Entity set or entity type removed
+    severity: critical
+    tool: odata-diff
+  - id: ODATA-BRK-002
+    title: Property removed
+    severity: critical
+    tool: odata-diff
+  - id: ODATA-BRK-003
+    title: Property type changed or narrowed
+    severity: critical
+    tool: odata-diff
+  - id: ODATA-BRK-004
+    title: Property became mandatory
+    severity: critical
+    tool: odata-diff
+  - id: ODATA-BRK-005
+    title: Action or function removed or signature changed
+    severity: critical
+    tool: odata-diff
+  - id: ODATA-BRK-006
+    title: Key changed
+    severity: critical
+    tool: odata-diff
+  - id: ODATA-CHG-001
+    title: Additive API change
+    severity: minor
+    tool: odata-diff

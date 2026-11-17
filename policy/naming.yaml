@@ -1,0 +1,27 @@
+# Naming conventions used by generators (to produce names) and linters (to check them).
+# Replace "acme" with your organisation before rollout.
+
+version: 1
+cap:
+  npmScope: "@acme"
+  namespacePattern: '^acme(\.[a-z][a-z0-9]*)+$'
+  servicePattern: '^[A-Z][A-Za-z0-9]*Service$'
+  entityPattern: '^[A-Z][A-Za-z0-9]*$'
+  elementPattern: '^[a-zA-Z][A-Za-z0-9_]*$'
+abap:
+  # Customer namespace prefix: "Z", "Y" or a registered "/ACME/" namespace.
+  prefix: Z
+  packagePattern: '^Z[A-Z0-9_]{1,29}$'
+  # RAP object name templates. {AREA} = 2-4 char application area, {ENTITY} = entity name.
+  # Lengths: tables <= 16, CDS / classes / service objects <= 30 characters.
+  rap:
+    table: "Z{AREA}_{ENTITY}"
+    draftTable: "Z{AREA}_{ENTITY}_D"
+    baseView: "ZR_{AREA}_{ENTITY}"
+    projectionView: "ZC_{AREA}_{ENTITY}"
+    accessControl: "ZR_{AREA}_{ENTITY}"
+    projectionAccessControl: "ZC_{AREA}_{ENTITY}"
+    behaviorPool: "ZBP_R_{AREA}_{ENTITY}"
+    serviceDefinition: "ZUI_{AREA}_{ENTITY}"
+    serviceBinding: "ZUI_{AREA}_{ENTITY}_O4"
+    unitTestClass: "ZTC_{AREA}_{ENTITY}"

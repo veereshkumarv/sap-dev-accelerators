@@ -1,0 +1,26 @@
+{
+  "$id": "https://sapdx.local/schemas/forbidden-objects.schema.json",
+  "type": "object",
+  "required": ["version"],
+  "additionalProperties": false,
+  "definitions": {
+    "list": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "successor"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "pattern": "^[A-Z0-9_/]+$" },
+          "successor": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "properties": {
+    "version": { "const": 1 },
+    "tables": { "$ref": "#/definitions/list" },
+    "functionModules": { "$ref": "#/definitions/list" },
+    "classes": { "$ref": "#/definitions/list" }
+  }
+}

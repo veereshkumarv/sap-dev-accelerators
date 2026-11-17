@@ -1,0 +1,29 @@
+{
+  "name": "@sapdx/abap-policy-lint",
+  "version": "0.1.0",
+  "description": "Tool 2 (ABAP): clean-core checks for abapGit/gCTS repositories using abaplint, emits SARIF.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "abap-policy-lint": "./bin/abap-policy-lint.js"
+  },
+  "files": [
+    "src",
+    "bin"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+  },
+  "dependencies": {
+    "@abaplint/core": "2.120.109",
+    "@sapdx/findings": "0.1.0",
+    "@sapdx/policy": "0.1.0",
+    "picomatch": "4.0.7",
+    "yaml": "2.9.1"
+  }
+}

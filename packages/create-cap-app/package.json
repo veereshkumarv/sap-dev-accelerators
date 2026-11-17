@@ -1,0 +1,27 @@
+{
+  "name": "@sapdx/create-cap-app",
+  "version": "0.1.0",
+  "description": "Tool 1 (CAP): golden-path CAP project generator wrapping cds init/cds add with organisation overlays.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "create-cap-app": "./bin/create-cap-app.js"
+  },
+  "files": [
+    "src",
+    "bin"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+  },
+  "dependencies": {
+    "@sap/cds-dk": "10.2.1",
+    "@sapdx/policy": "0.1.0",
+    "yaml": "2.9.1"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@sapdx/cap-policy-lint",
+  "version": "0.1.0",
+  "description": "Tool 2 (CAP): clean-core and security policy checks for CAP projects, emits SARIF.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "cap-policy-lint": "./bin/cap-policy-lint.js"
+  },
+  "files": [
+    "src",
+    "bin"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+  },
+  "dependencies": {
+    "@sap/cds": "10.2.2",
+    "@sapdx/findings": "0.1.0",
+    "@sapdx/policy": "0.1.0",
+    "espree": "11.2.0",
+    "picomatch": "4.0.7",
+    "yaml": "2.9.1"
+  }
+}

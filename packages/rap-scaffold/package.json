@@ -1,0 +1,29 @@
+{
+  "name": "@sapdx/rap-scaffold",
+  "version": "0.1.0",
+  "description": "Tool 1 (RAP): generates clean-core RAP business objects in abapGit format from a BO model.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "rap-scaffold": "./bin/rap-scaffold.js"
+  },
+  "files": [
+    "src",
+    "bin"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+  },
+  "dependencies": {
+    "@sapdx/policy": "0.1.0",
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@abaplint/core": "2.120.109"
+  }
+}

@@ -1,0 +1,20 @@
+# Time-boxed exemptions. Every entry needs: owner, justification (>= 20 chars),
+# approving architect (not the owner), expiry (max 12 months after created) and a
+# remediation backlog item. Expired exemptions raise POL-EXEMPT-001 (blocker).
+#
+# Match by "object" (exact logical object, e.g. "CLAS ZCL_SALES_HELPER") and/or
+# "path" (glob on repository-relative file path).
+#
+# Example:
+# - id: EXM-0001
+#   rule: ABAP-CC-001
+#   object: CLAS ZCL_SALES_HELPER
+#   owner: jane.doe
+#   approver: john.architect
+#   justification: No released successor for BAPI_X until release 2508.
+#   created: 2026-11-01
+#   expires: 2027-03-31
+#   backlog: JIRA-1234
+
+version: 1
+exemptions: []
