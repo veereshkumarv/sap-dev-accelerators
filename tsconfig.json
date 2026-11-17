@@ -9,8 +9,18 @@
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["packages/*/src/**/*.js", "packages/*/bin/**/*.js"],
-  "exclude": ["**/node_modules/**", "packages/*/templates/**"]
+  "include": [
+    "types/**/*.d.ts",
+    "scripts/**/*.js",
+    "packages/*/src/**/*.js",
+    "packages/*/bin/**/*.js"
+  ],
+  "exclude": [
+    "**/node_modules/**",
+    "packages/*/templates/**"
+  ]
 }

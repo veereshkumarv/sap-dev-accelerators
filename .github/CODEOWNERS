@@ -1,0 +1,8 @@
+# Replace the team handles with your organisation's teams before rollout.
+
+*                          @acme/sap-platform-team
+
+# Policy changes (rules, severities, exemptions, naming) need architect approval.
+/policy/                   @acme/sap-architects
+/packages/policy/schemas/  @acme/sap-architects
+/docs/GUARDRAILS.md        @acme/sap-architects

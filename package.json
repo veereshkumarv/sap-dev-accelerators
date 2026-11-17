@@ -13,7 +13,7 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "npm test --workspaces --if-present",
+    "test": "node scripts/verify-workspaces.js && npm test --workspaces --if-present",
     "check": "npm run lint && npm run typecheck && npm test"
   },
   "devDependencies": {
