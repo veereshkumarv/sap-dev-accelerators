@@ -1,3 +1,11 @@
+<!--
+What: Checklist shown in every pull request description.
+Why: Reminds authors of the gates (tests, fixtures, guardrails, policy approval) before reviewers
+    spend time.
+If missing or unlinked: PRs open with an empty description; reviewers must chase missing tests and
+    approvals manually.
+-->
+
 ## What and why
 
 ## Checklist

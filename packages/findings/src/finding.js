@@ -1,3 +1,10 @@
+/**
+ * What: Creates and validates findings and computes their line-independent fingerprint.
+ * Why: Validation surfaces tool bugs immediately; stable fingerprints let baselines survive
+ *     unrelated line moves.
+ * If missing or unlinked: No tool can emit findings; with a broken fingerprint every edit would
+ *     turn legacy findings into "new" blockers.
+ */
 import { createHash } from 'node:crypto';
 import { isSeverity } from './severity.js';
 

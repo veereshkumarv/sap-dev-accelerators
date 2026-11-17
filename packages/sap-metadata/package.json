@@ -1,4 +1,9 @@
 {
+  "//": [
+    "What: Package manifest for @sapdx/sap-metadata: normalised OData service model from EDMX (V2/V4) or CAP CSN.",
+    "Why: Test generation and API diffing share one metadata model instead of parsing EDMX twice.",
+    "If missing or unlinked: odata-diff and odata-testgen cannot read service metadata."
+  ],
   "name": "@sapdx/sap-metadata",
   "version": "0.1.0",
   "description": "Normalised OData service model from EDMX (V2/V4) or CAP CSN.",
@@ -13,7 +18,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
     "@sap-ux/annotation-converter": "0.10.23",

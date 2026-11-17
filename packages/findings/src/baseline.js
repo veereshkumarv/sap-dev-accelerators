@@ -1,3 +1,11 @@
+/**
+ * What: Baseline handling and the gate decision: which findings are new vs. accepted legacy, and
+ *     whether the gate passes.
+ * Why: Lets teams adopt the gates on existing code without being blocked by old debt, while never
+ *     baselining secrets/modifications.
+ * If missing or unlinked: Gates cannot distinguish legacy from new issues; adoption on brownfield
+ *     code becomes impossible.
+ */
 import { isBlocking } from './severity.js';
 
 /**

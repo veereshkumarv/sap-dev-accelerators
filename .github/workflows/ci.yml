@@ -1,3 +1,10 @@
+# What: GitHub Actions pipeline for this repo: lint + header check + types + tests on Node 22/24,
+#     dogfood clean-core gates, secret and dependency scans.
+# Why: Every change is verified automatically, and the accelerators are run against their own
+#     reference output.
+# If missing or unlinked: Nothing runs on push/PR; broken tools, leaked secrets and vulnerable
+#     dependencies can be merged unnoticed.
+
 name: ci
 
 on:

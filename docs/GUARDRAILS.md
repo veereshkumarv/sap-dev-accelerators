@@ -1,3 +1,12 @@
+<!--
+What: Binding engineering and clean-core rules for the accelerators and for all code they
+    generate.
+Why: Single reference for reviewers and generators: released APIs only, authorization by default,
+    quality gates, exemptions.
+If missing or unlinked: Reviews lose their agreed standard and generators drift from clean-core
+    principles; CODEOWNERS still protect the path.
+-->
+
 # Guardrails
 
 Binding rules for everything in this repository: the accelerators themselves and the
@@ -49,6 +58,13 @@ severity, the policy catalog decides. Blocker/Critical never get averaged away.
 - Never execute code from the project being analysed; parse it.
 - Every rule has at least one positive and one negative fixture test.
 - No new runtime dependency without a reason in the PR description; prefer Node built-ins.
+- Scripts and tooling are written in JavaScript (Node.js); UI code uses SAPUI5. No Python.
+- **Every file starts with a header** stating *What* the file does, *Why* it exists, and
+  *If missing or unlinked* — what breaks when the file is absent or its reference is broken.
+  Use the file type's comment syntax; strict JSON uses a `"//"` key (package.json) or
+  `$comment` (JSON Schema). Generators must emit this header in every file they create.
+  Enforced by `scripts/check-file-headers.js` in `npm run lint` (only exception:
+  `package-lock.json`, rewritten by npm).
 
 ## 4. Exemptions
 

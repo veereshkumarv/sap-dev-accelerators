@@ -1,0 +1,25 @@
+{
+  "//": [
+    "What: Fixture: non-compliant manifest with inline production credentials and a remote service without destination.",
+    "Why: Positive fixture for CAP-REMOTE-001 and CAP-SEC-001 in configuration.",
+    "If missing or unlinked: Positive tests for remote-service and config-secret rules fail."
+  ],
+  "name": "bad-app",
+  "version": "1.0.0",
+  "private": true,
+  "cds": {
+    "requires": {
+      "API_SALES_ORDER_SRV": {
+        "kind": "odata-v2",
+        "credentials": {
+          "url": "https://my-s4.example.com/sap/opu/odata/sap/API_SALES_ORDER_SRV",
+          "username": "RFC_USER",
+          "password": "S3cr3t!pass"
+        }
+      },
+      "API_PRODUCT_SRV": {
+        "kind": "odata-v2"
+      }
+    }
+  }
+}

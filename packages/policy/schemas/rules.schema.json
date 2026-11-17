@@ -1,25 +1,60 @@
 {
   "$id": "https://sapdx.local/schemas/rules.schema.json",
+  "$comment": "What: JSON Schema for policy/rules.yaml (rule id format, severity values, allowed fields). Why: Typos in the catalog (e.g. severity \"hihg\") must be rejected, not silently treated as unknown. If missing or unlinked: rules.yaml is loaded without validation; malformed rules can change gate behaviour unnoticed.",
   "type": "object",
-  "required": ["version", "rules"],
+  "required": [
+    "version",
+    "rules"
+  ],
   "additionalProperties": false,
   "properties": {
-    "version": { "const": 1 },
+    "version": {
+      "const": 1
+    },
     "rules": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "title", "severity", "tool"],
+        "required": [
+          "id",
+          "title",
+          "severity",
+          "tool"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string", "pattern": "^[A-Z][A-Z0-9]*(-[A-Z0-9_]+)*(-[A-Z0-9_]+|-\\*)$" },
-          "title": { "type": "string", "minLength": 3 },
-          "severity": { "enum": ["blocker", "critical", "major", "minor"] },
-          "tool": { "type": "string", "minLength": 1 },
-          "description": { "type": "string" },
-          "helpUri": { "type": "string" },
-          "enabled": { "type": "boolean" },
-          "baselineable": { "type": "boolean" }
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9]*(-[A-Z0-9_]+)*(-[A-Z0-9_]+|-\\*)$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3
+          },
+          "severity": {
+            "enum": [
+              "blocker",
+              "critical",
+              "major",
+              "minor"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "helpUri": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "baselineable": {
+            "type": "boolean"
+          }
         }
       }
     }

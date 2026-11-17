@@ -1,26 +1,46 @@
 {
   "$id": "https://sapdx.local/schemas/forbidden-objects.schema.json",
+  "$comment": "What: JSON Schema for policy/forbidden-objects.yaml (object names and successor texts). Why: Guarantees every forbidden object names a successor developers can use. If missing or unlinked: forbidden-objects.yaml is not validated; entries without successors or with typos are accepted.",
   "type": "object",
-  "required": ["version"],
+  "required": [
+    "version"
+  ],
   "additionalProperties": false,
   "definitions": {
     "list": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "successor"],
+        "required": [
+          "name",
+          "successor"
+        ],
         "additionalProperties": false,
         "properties": {
-          "name": { "type": "string", "pattern": "^[A-Z0-9_/]+$" },
-          "successor": { "type": "string", "minLength": 1 }
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_/]+$"
+          },
+          "successor": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     }
   },
   "properties": {
-    "version": { "const": 1 },
-    "tables": { "$ref": "#/definitions/list" },
-    "functionModules": { "$ref": "#/definitions/list" },
-    "classes": { "$ref": "#/definitions/list" }
+    "version": {
+      "const": 1
+    },
+    "tables": {
+      "$ref": "#/definitions/list"
+    },
+    "functionModules": {
+      "$ref": "#/definitions/list"
+    },
+    "classes": {
+      "$ref": "#/definitions/list"
+    }
   }
 }

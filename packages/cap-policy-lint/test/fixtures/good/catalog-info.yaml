@@ -1,0 +1,15 @@
+# What: Fixture: Backstage catalog entry with owner, lifecycle and API version annotation.
+# Why: Negative fixture for CAP-API-001 (API ownership metadata).
+# If missing or unlinked: The good fixture would report CAP-API-001 and the "no findings" test
+#     fails.
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: good-app
+  annotations:
+    sapdx.io/api-version: 1.0.0
+spec:
+  type: service
+  owner: team-sales
+  lifecycle: production

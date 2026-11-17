@@ -1,6 +1,12 @@
 #!/usr/bin/env node
-// Guardrail: a workspace package must ship an entry point and tests. Without this
-// check, `node --test` on an empty package reports 0 tests and 100 % coverage.
+/**
+ * What: Guardrail run before the tests: every workspace package must have an entry point, test
+ *     files and a coverage threshold.
+ * Why: node --test on an empty package reports 0 tests and 100 % coverage - a false green this
+ *     script turns into a failure.
+ * If missing or unlinked: Unbuilt or untested packages pass npm test and CI, hiding missing tools
+ *     behind a green pipeline.
+ */
 import { readFile, readdir, access } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

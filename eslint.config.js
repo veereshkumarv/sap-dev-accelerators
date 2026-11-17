@@ -1,3 +1,10 @@
+/**
+ * What: ESLint flat configuration applied to every JavaScript file in the monorepo.
+ * Why: Enforces a common code-quality baseline (no eval, strict equality, no unused vars) as part
+ *     of the CI gate.
+ * If missing or unlinked: npm run lint fails with "no configuration found" and code-quality
+ *     problems reach main unchecked.
+ */
 import js from '@eslint/js';
 import globals from 'globals';
 

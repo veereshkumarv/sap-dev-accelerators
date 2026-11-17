@@ -1,3 +1,11 @@
+/**
+ * What: Tests for policy loading/validation, exemption rules, policy application, naming helpers,
+ *     the gate and its CLI.
+ * Why: Governance logic decides what blocks releases; it must be proven, including expiry and
+ *     approval rules.
+ * If missing or unlinked: The package fails the workspace guardrail and exemption/severity
+ *     regressions go untested.
+ */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtemp, writeFile, readFile, mkdir, cp } from 'node:fs/promises';

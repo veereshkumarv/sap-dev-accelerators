@@ -1,3 +1,10 @@
+# What: Naming conventions: CAP namespace/service/entity/element patterns and RAP object name
+#     templates with ABAP length limits.
+# Why: Generators produce, and linters check, the same names - one definition instead of
+#     conventions scattered in code.
+# If missing or unlinked: CAP-NAME-001 / ABAP-NAME-001 checks are skipped and generators cannot
+#     derive RAP object names.
+
 # Naming conventions used by generators (to produce names) and linters (to check them).
 # Replace "acme" with your organisation before rollout.
 

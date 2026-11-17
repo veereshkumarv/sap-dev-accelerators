@@ -1,4 +1,12 @@
 /**
+ * What: Defines the four-level severity scale, ordering, the "blocking" rule (blocker+critical)
+ *     and SARIF level mapping.
+ * Why: A single severity model means no tool can invent its own scale or average serious issues
+ *     away.
+ * If missing or unlinked: Findings cannot be created or compared, SARIF levels are wrong, and
+ *     gates cannot decide what blocks.
+ */
+/**
  * Severity scale shared by every accelerator. Ordered from most to least severe.
  * Blocker and Critical findings fail quality gates.
  *

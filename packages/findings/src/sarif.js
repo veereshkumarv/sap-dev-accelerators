@@ -1,3 +1,11 @@
+/**
+ * What: Converts findings to and from SARIF 2.1.0, including exemptions as suppressions and
+ *     third-party SARIF (gitleaks etc.).
+ * Why: SARIF is the exchange format between tools, the central gate, GitHub code scanning and the
+ *     readiness checker.
+ * If missing or unlinked: Tools cannot write reports, the gate cannot read them, and code
+ *     scanning shows nothing.
+ */
 import { createFinding } from './finding.js';
 import { fromSarifLevel, isSeverity, toSarifLevel } from './severity.js';
 

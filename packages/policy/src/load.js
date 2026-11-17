@@ -1,3 +1,11 @@
+/**
+ * What: Finds the policy directory, parses the YAML files, validates them against JSON Schemas
+ *     and checks exemption rules.
+ * Why: Bad policy must fail loudly (all problems listed at once) instead of silently weakening
+ *     the gates.
+ * If missing or unlinked: No tool can obtain rules, exemptions or naming; every lint and gate run
+ *     aborts.
+ */
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

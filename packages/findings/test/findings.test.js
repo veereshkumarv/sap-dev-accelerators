@@ -1,3 +1,11 @@
+/**
+ * What: Unit tests for severity, finding validation, fingerprints, SARIF round trip, baseline
+ *     diff and gate logic.
+ * Why: This library decides what blocks a release; regressions here would silently change every
+ *     gate.
+ * If missing or unlinked: The package fails the workspace guardrail and behaviour changes in the
+ *     shared contract go untested.
+ */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {

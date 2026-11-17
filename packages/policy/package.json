@@ -1,4 +1,9 @@
 {
+  "//": [
+    "What: Package manifest for @sapdx/policy: policy loading/validation, exemptions, naming helpers and the sapdx-gate CLI.",
+    "Why: Centralises governance logic so all tools apply severities and exemptions identically.",
+    "If missing or unlinked: Tools cannot load policy and the sapdx-gate command is not installed."
+  ],
   "name": "@sapdx/policy",
   "version": "0.1.0",
   "description": "Central policy engine: rule catalog, time-boxed exemptions, naming conventions and the SARIF quality gate.",
@@ -18,7 +23,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=90 --test-coverage-include=src/** test/"
+    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=90 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
     "@sapdx/findings": "0.1.0",

@@ -1,3 +1,9 @@
+/**
+ * What: Renders findings as a sorted, human-readable console report with a severity summary.
+ * Why: Developers need a readable local report, not only machine SARIF.
+ * If missing or unlinked: CLIs (sapdx-gate, cap-policy-lint) fail to import it and cannot print
+ *     text output.
+ */
 import { compareSeverity } from './severity.js';
 
 /**

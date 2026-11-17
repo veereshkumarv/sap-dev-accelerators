@@ -1,4 +1,12 @@
 /**
+ * What: Renders RAP object names from naming.yaml templates (with ABAP length checks) and
+ *     validates CAP names.
+ * Why: Generators and linters share one naming implementation, so generated code always passes
+ *     the naming checks.
+ * If missing or unlinked: RAP scaffolding cannot name objects and CAP naming checks
+ *     (CAP-NAME-001) fail to import.
+ */
+/**
  * Naming helpers shared by generators (to produce names) and linters (to check them).
  */
 

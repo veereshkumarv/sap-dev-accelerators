@@ -1,4 +1,12 @@
 /**
+ * What: Public entry point of @sapdx/findings: re-exports severity, finding, SARIF, baseline and
+ *     text-format helpers plus shared types.
+ * Why: Consumers import from one stable path instead of internal files, so internals can change
+ *     safely.
+ * If missing or unlinked: import "@sapdx/findings" fails in every tool, and shared JSDoc types
+ *     (Finding, Severity) become unresolved.
+ */
+/**
  * @typedef {import('./severity.js').Severity} Severity
  * @typedef {import('./finding.js').Finding} Finding
  * @typedef {import('./finding.js').FindingInput} FindingInput

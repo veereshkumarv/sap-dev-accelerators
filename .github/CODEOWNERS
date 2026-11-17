@@ -1,3 +1,9 @@
+# What: Assigns required reviewers: architects own policy/ and the guardrails, the platform team
+#     owns everything else.
+# Why: Severity, exemption and naming changes alter what the gates block, so they need architect
+#     approval.
+# If missing or unlinked: Anyone can merge policy changes (e.g. self-approved exemptions or
+#     downgraded severities) without architect review.
 # Replace the team handles with your organisation's teams before rollout.
 
 *                          @acme/sap-platform-team

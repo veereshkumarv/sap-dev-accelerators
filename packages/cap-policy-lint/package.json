@@ -1,4 +1,9 @@
 {
+  "//": [
+    "What: Package manifest for @sapdx/cap-policy-lint, the clean-core/security/quality linter for CAP projects.",
+    "Why: Declares the CLI and the dependencies (CDS compiler, JS parser) used to analyse CAP projects without executing them.",
+    "If missing or unlinked: The cap-policy-lint command is not installed; generated CAP projects and CI cannot run the CAP policy check."
+  ],
   "name": "@sapdx/cap-policy-lint",
   "version": "0.1.0",
   "description": "Tool 2 (CAP): clean-core and security policy checks for CAP projects, emits SARIF.",
@@ -17,7 +22,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
     "@sap/cds": "10.2.2",

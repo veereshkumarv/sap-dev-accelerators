@@ -1,4 +1,9 @@
 {
+  "//": [
+    "What: Package manifest for @sapdx/rap-scaffold (Tool 1, RAP): generates clean-core RAP business objects in abapGit format.",
+    "Why: RAP objects start ABAP-Cloud compliant, with authorization, draft and tests, and are reviewed as normal PRs.",
+    "If missing or unlinked: The rap-scaffold command is unavailable; RAP objects are hand-built without the approved patterns."
+  ],
   "name": "@sapdx/rap-scaffold",
   "version": "0.1.0",
   "description": "Tool 1 (RAP): generates clean-core RAP business objects in abapGit format from a BO model.",
@@ -17,7 +22,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
     "@sapdx/policy": "0.1.0",

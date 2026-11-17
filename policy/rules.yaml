@@ -1,3 +1,10 @@
+# What: Central rule catalog: every rule id, its severity (blocker/critical/major/minor), owning
+#     tool and whether it may be baselined.
+# Why: Single source of truth for severities - tools propose, this catalog decides - so gates
+#     behave the same everywhere.
+# If missing or unlinked: loadPolicy throws (rules.yaml is mandatory) and every linter, gate and
+#     readiness check stops with a configuration error.
+
 # Central rule catalog. The policy engine is the source of truth for severity:
 # tools propose a severity, the catalog decides. Changing this file requires
 # architect approval (see CODEOWNERS).
@@ -36,7 +43,7 @@ rules:
     title: Writable entity without access restriction
     severity: critical
     tool: cap-policy-lint
-    description: Entities that accept CREATE/UPDATE/DELETE must be covered by @restrict, @requires on the service, or be @readonly.
+    description: Entities that accept CREATE/UPDATE/DELETE must be covered by @restrict, a business role in @requires (pseudo roles such as authenticated-user do not count), or be @readonly.
   - id: CAP-SEC-001
     title: Hard-coded secret
     severity: blocker

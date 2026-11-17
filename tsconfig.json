@@ -1,3 +1,9 @@
+// What: TypeScript configuration used only for type checking the JavaScript sources via JSDoc
+//     (checkJs, strict, noEmit).
+// Why: Catches type errors in plain JavaScript without a build step, so packages run directly on
+//     Node.
+// If missing or unlinked: npm run typecheck fails; if include paths are broken, files are
+//     silently skipped and type errors go undetected.
 {
   "compilerOptions": {
     "allowJs": true,

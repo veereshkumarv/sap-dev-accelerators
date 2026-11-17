@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * What: Command-line wrapper for the central gate (sapdx-gate <sarif...>) with exit codes 0 pass
+ *     / 1 fail / 2 config error.
+ * Why: CI pipelines and generated projects call this command as their blocking quality step.
+ * If missing or unlinked: The sapdx-gate command does not exist; pipeline steps calling it fail.
+ */
 import { parseArgs } from 'node:util';
 import { runGate } from '../src/gate.js';
 

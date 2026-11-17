@@ -1,3 +1,11 @@
+/**
+ * What: Applies the policy to raw findings: catalog severity, disabled rules, governed
+ *     exemptions, expired/unused exemption findings.
+ * Why: Makes the catalog authoritative and ensures only approved, unexpired exemptions suppress
+ *     findings.
+ * If missing or unlinked: Tool-proposed severities and third-party in-source suppressions would
+ *     be trusted; expired exemptions would go unnoticed.
+ */
 import picomatch from 'picomatch';
 import { createFinding } from '@sapdx/findings';
 

@@ -1,3 +1,9 @@
+# What: Lists files Git must never track: dependencies, build output, coverage, local
+#     env/credential files, SQLite DBs.
+# Why: Prevents committing secrets (.env, default-env.json, .cdsrc-private.json) and large
+#     generated artefacts.
+# If missing or unlinked: node_modules, credentials and build output can be committed by accident;
+#     the secret scan in CI would then fail.
 node_modules/
 coverage/
 *.log

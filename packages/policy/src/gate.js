@@ -1,3 +1,10 @@
+/**
+ * What: Central quality gate: merges SARIF from all tools, re-applies policy, compares to the
+ *     baseline, returns pass/fail.
+ * Why: One final decision point for CI, independent of which tools produced the findings.
+ * If missing or unlinked: sapdx-gate cannot run; pipelines lose their single blocking step for
+ *     new Blocker/Critical findings.
+ */
 import { readFile, writeFile } from 'node:fs/promises';
 import {
   createBaseline,

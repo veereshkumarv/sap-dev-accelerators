@@ -1,4 +1,9 @@
 {
+  "//": [
+    "What: Package manifest for @sapdx/abap-policy-lint (Tool 2, ABAP layer): clean-core checks for abapGit/gCTS repos via abaplint.",
+    "Why: Fast off-system feedback in pull requests before the authoritative in-system ATC run.",
+    "If missing or unlinked: The ABAP clean-core gate cannot be installed or run in CI."
+  ],
   "name": "@sapdx/abap-policy-lint",
   "version": "0.1.0",
   "description": "Tool 2 (ABAP): clean-core checks for abapGit/gCTS repositories using abaplint, emits SARIF.",
@@ -17,7 +22,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
     "@abaplint/core": "2.120.109",

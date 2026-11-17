@@ -1,4 +1,9 @@
 {
+  "//": [
+    "What: Package manifest for @sapdx/s4-mock (Tool 4): stateful S/4HANA API mock with fault injection, built as a CAP app.",
+    "Why: CAP teams can develop and test integrations without waiting for a shared S/4 system.",
+    "If missing or unlinked: The mock server cannot be started; integration tests depend on a real S/4 system again."
+  ],
   "name": "@sapdx/s4-mock",
   "version": "0.1.0",
   "description": "Tool 4: stateful S/4HANA API mock (Business Partner, Sales Order, Product) with fault injection.",
@@ -19,7 +24,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test \"test/*.test.js\"",
     "start": "cds-serve"
   },
   "dependencies": {

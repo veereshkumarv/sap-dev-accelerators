@@ -1,4 +1,9 @@
 {
+  "//": [
+    "What: Root of the npm workspace: declares all packages under packages/*, shared dev tooling and the check scripts.",
+    "Why: One install and one command (npm run check) run lint, header check, type check and all tests across every tool.",
+    "If missing or unlinked: Workspaces are not linked (@sapdx/* imports fail), and CI has no lint/typecheck/test entry points."
+  ],
   "name": "sap-dev-accelerators",
   "version": "0.1.0",
   "private": true,
@@ -11,7 +16,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . && node scripts/check-file-headers.js",
     "typecheck": "tsc -p tsconfig.json",
     "test": "node scripts/verify-workspaces.js && npm test --workspaces --if-present",
     "check": "npm run lint && npm run typecheck && npm test"

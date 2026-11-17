@@ -1,29 +1,67 @@
 {
   "$id": "https://sapdx.local/schemas/naming.schema.json",
+  "$comment": "What: JSON Schema for policy/naming.yaml (regex patterns, customer prefix, RAP name templates). Why: Invalid patterns or templates must fail at load time, not deep inside a generator run. If missing or unlinked: naming.yaml is not validated; broken regexes or templates cause confusing runtime errors or wrong names.",
   "type": "object",
-  "required": ["version", "cap", "abap"],
+  "required": [
+    "version",
+    "cap",
+    "abap"
+  ],
   "additionalProperties": false,
   "properties": {
-    "version": { "const": 1 },
+    "version": {
+      "const": 1
+    },
     "cap": {
       "type": "object",
-      "required": ["npmScope", "namespacePattern", "servicePattern", "entityPattern", "elementPattern"],
+      "required": [
+        "npmScope",
+        "namespacePattern",
+        "servicePattern",
+        "entityPattern",
+        "elementPattern"
+      ],
       "additionalProperties": false,
       "properties": {
-        "npmScope": { "type": "string", "pattern": "^@[a-z0-9][a-z0-9._-]*$" },
-        "namespacePattern": { "type": "string", "format": "regex" },
-        "servicePattern": { "type": "string", "format": "regex" },
-        "entityPattern": { "type": "string", "format": "regex" },
-        "elementPattern": { "type": "string", "format": "regex" }
+        "npmScope": {
+          "type": "string",
+          "pattern": "^@[a-z0-9][a-z0-9._-]*$"
+        },
+        "namespacePattern": {
+          "type": "string",
+          "format": "regex"
+        },
+        "servicePattern": {
+          "type": "string",
+          "format": "regex"
+        },
+        "entityPattern": {
+          "type": "string",
+          "format": "regex"
+        },
+        "elementPattern": {
+          "type": "string",
+          "format": "regex"
+        }
       }
     },
     "abap": {
       "type": "object",
-      "required": ["prefix", "packagePattern", "rap"],
+      "required": [
+        "prefix",
+        "packagePattern",
+        "rap"
+      ],
       "additionalProperties": false,
       "properties": {
-        "prefix": { "type": "string", "pattern": "^(Z|Y|/[A-Z0-9]{1,8}/)$" },
-        "packagePattern": { "type": "string", "format": "regex" },
+        "prefix": {
+          "type": "string",
+          "pattern": "^(Z|Y|/[A-Z0-9]{1,8}/)$"
+        },
+        "packagePattern": {
+          "type": "string",
+          "format": "regex"
+        },
         "rap": {
           "type": "object",
           "required": [
@@ -38,7 +76,10 @@
             "serviceBinding",
             "unitTestClass"
           ],
-          "additionalProperties": { "type": "string", "pattern": "\\{ENTITY\\}" }
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "\\{ENTITY\\}"
+          }
         }
       }
     }

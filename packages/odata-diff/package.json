@@ -1,4 +1,9 @@
 {
+  "//": [
+    "What: Package manifest for @sapdx/odata-diff: detects breaking OData API changes between two service versions.",
+    "Why: Incompatible API changes must be caught before shared QA, not by consumers.",
+    "If missing or unlinked: API compatibility checks (ODATA-BRK-*) cannot run in CI or readiness checks."
+  ],
   "name": "@sapdx/odata-diff",
   "version": "0.1.0",
   "description": "API compatibility check between two OData service versions, emits SARIF.",
@@ -17,7 +22,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** test/"
+    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
     "@sapdx/findings": "0.1.0",

@@ -1,3 +1,8 @@
+# What: Editor settings (UTF-8, LF, 2-space indent, final newline) for all files, including
+#     ABAP/CDS sources.
+# Why: Keeps diffs clean and formatting identical across VS Code, Eclipse ADT and other editors.
+# If missing or unlinked: Editors fall back to personal defaults; mixed indentation and line
+#     endings create noisy diffs and review friction.
 root = true
 
 [*]

@@ -1,3 +1,10 @@
+# What: Register of time-boxed exemptions (owner, approver, justification, expiry, backlog item)
+#     for specific findings.
+# Why: The only governed way to accept a policy violation; expiry stops exemptions from becoming
+#     permanent architecture.
+# If missing or unlinked: No exemptions apply (all findings count); a malformed file makes
+#     loadPolicy fail and every gate stops.
+
 # Time-boxed exemptions. Every entry needs: owner, justification (>= 20 chars),
 # approving architect (not the owner), expiry (max 12 months after created) and a
 # remediation backlog item. Expired exemptions raise POL-EXEMPT-001 (blocker).

@@ -1,0 +1,44 @@
+{
+  "//": [
+    "What: Fixture: compliant CAP project manifest (mocked dev users, remote service via destination in production).",
+    "Why: Negative fixture proving the linter reports nothing for clean configuration.",
+    "If missing or unlinked: CDS compilation of the good fixture fails and the \"compliant project has no findings\" test breaks."
+  ],
+  "name": "good-app",
+  "version": "1.0.0",
+  "private": true,
+  "cds": {
+    "requires": {
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "alice": {
+            "password": "alice",
+            "roles": [
+              "Admin"
+            ]
+          },
+          "bob": {
+            "roles": [
+              "Viewer"
+            ]
+          }
+        }
+      },
+      "API_BUSINESS_PARTNER": {
+        "kind": "odata-v2",
+        "[development]": {
+          "credentials": {
+            "url": "http://localhost:4004/sap/opu/odata/sap/API_BUSINESS_PARTNER"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "S4HANA",
+            "path": "/sap/opu/odata/sap/API_BUSINESS_PARTNER"
+          }
+        }
+      }
+    }
+  }
+}

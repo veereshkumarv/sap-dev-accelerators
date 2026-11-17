@@ -1,3 +1,10 @@
+# What: SAP tables, function modules and classes that must not be used directly, each with its
+#     released successor.
+# Why: Adds organisation-specific clean-core bans on top of SAP's released-API list and tells
+#     developers what to use instead.
+# If missing or unlinked: ABAP-CC-003/004 checks have nothing to compare against and direct table
+#     access / forbidden calls pass the gate.
+
 # Objects that must not be used directly, with their released successor.
 # Unreleased-API detection in general comes from SAP's Cloudification Repository
 # (github.com/SAP/abap-atc-cr-cv-s4hc); this list adds organisation-specific bans
