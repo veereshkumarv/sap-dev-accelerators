@@ -86,6 +86,10 @@ jobs:
         run: |
           node packages/rap-scaffold/bin/rap-scaffold.js --model packages/rap-scaffold/examples/sales-order.yaml --out "$RUNNER_TEMP/rap"
           diff -r "$RUNNER_TEMP/rap" packages/rap-scaffold/examples/out
+      - name: ABAP clean-core gate on the generated example (SAP released-API list)
+        run: |
+          node packages/abap-policy-lint/bin/abap-policy-lint.js update-released-apis --variant btp --out "$RUNNER_TEMP/released-apis.json"
+          node packages/abap-policy-lint/bin/abap-policy-lint.js packages/rap-scaffold/examples/out --released-apis "$RUNNER_TEMP/released-apis.json"
 
   security:
     name: secrets and dependencies

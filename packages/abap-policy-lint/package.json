@@ -9,7 +9,8 @@
   "description": "Tool 2 (ABAP): clean-core checks for abapGit/gCTS repositories using abaplint, emits SARIF.",
   "type": "module",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./abaplint-compat": "./src/abaplint-compat.js"
   },
   "bin": {
     "abap-policy-lint": "./bin/abap-policy-lint.js"

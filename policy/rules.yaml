@@ -118,6 +118,21 @@ rules:
     severity: critical
     tool: abap-policy-lint
     description: Object listed in forbidden-objects.yaml; use the named successor.
+  - id: ABAP-CC-005
+    title: Deprecated SAP API used
+    severity: major
+    tool: abap-policy-lint
+    description: The SAP object is released but deprecated; switch to the successor named in the finding before it is withdrawn.
+  - id: ABAP-SYNTAX-001
+    title: Offline syntax or parser problem
+    severity: major
+    tool: abap-policy-lint
+    description: abaplint could not compile or parse the object offline. Reported, not blocking - offline checks lack the full system context; activation and ATC in the system are authoritative. Use --deps to supply referenced customer objects.
+  - id: ABAP-SEC-002
+    title: Dangerous statement
+    severity: critical
+    tool: abap-policy-lint
+    description: Native SQL, kernel/system calls or dynamic program generation bypass the ABAP security and clean-core model.
   - id: ABAP-LANG-001
     title: Not ABAP Cloud language version
     severity: blocker

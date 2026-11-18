@@ -25,7 +25,7 @@ quality feedback loops - with one central policy deciding what blocks a release.
 | 1 | CAP golden-path generator | [`@sapdx/create-cap-app`](packages/create-cap-app) | ✅ built, 20 tests; generated app passes lint, 15/15 tests, policy gate and `mbt build` |
 | 2 | CAP clean-core / security lint | [`@sapdx/cap-policy-lint`](packages/cap-policy-lint) | ✅ built, 12 rules, 27 tests |
 | 1 | RAP generator (abapGit output) | [`@sapdx/rap-scaffold`](packages/rap-scaffold) | ✅ built, 24 tests; output verified offline with abaplint (ABAP Cloud), not yet imported into a system |
-| 2 | ABAP clean-core lint (abaplint) | [`@sapdx/abap-policy-lint`](packages/abap-policy-lint) | ⏳ planned |
+| 2 | ABAP clean-core lint (abaplint) | [`@sapdx/abap-policy-lint`](packages/abap-policy-lint) | ✅ built, 17 rules, 10 tests; checks against SAP's released-API list; generated RAP example passes |
 | 3 | OData metadata, API diff, test generator | [`sap-metadata`](packages/sap-metadata), [`odata-diff`](packages/odata-diff), [`odata-testgen`](packages/odata-testgen) | ⏳ planned |
 | 4 | S/4HANA mock server | [`@sapdx/s4-mock`](packages/s4-mock) | ⏳ planned |
 | 5 | Transport / deployment readiness (R/A/G) | [`@sapdx/readiness`](packages/readiness) | ⏳ planned |
@@ -61,9 +61,13 @@ npx sapdx-gate cap.sarif other.sarif --baseline baseline.json
 
 # Generate a RAP business object (abapGit format, verified with abaplint)
 npx rap-scaffold --model packages/rap-scaffold/examples/sales-order.yaml --out ~/work/zsd-orders
+
+# ABAP clean-core gate for an abapGit repository (SAP released-API list downloaded once)
+npx abap-policy-lint update-released-apis --variant btp --out ~/work/zsd-orders/.sapdx/released-apis.json
+npx abap-policy-lint ~/work/zsd-orders
 ```
 
-Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold](packages/rap-scaffold/README.md).
+Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold](packages/rap-scaffold/README.md), [abap-policy-lint](packages/abap-policy-lint/README.md).
 
 ## How the pieces fit
 
@@ -103,10 +107,9 @@ naming rules by construction.
 | Major | performance risk, missing tests, poor error handling | reported |
 | Minor | naming, documentation, maintainability | reported |
 
-The catalog defines 35 rules (12 CAP, 14 ABAP, 7 OData, 2 policy). CAP rules are implemented in
-`cap-policy-lint`. ABAP and OData rules are specified for the planned checkers: `rap-scaffold`
-already generates code that follows the ABAP rules (released APIs, `#CHECK` access control,
-authorization, tests), but no ABAP gate checks it until `abap-policy-lint` is built.
+The catalog defines 38 rules (12 CAP, 17 ABAP, 7 OData, 2 policy). CAP rules are implemented in
+`cap-policy-lint`, ABAP rules in `abap-policy-lint` (offline layer; ATC in the system stays
+authoritative), OData rules are specified for the planned `odata-diff`.
 
 **Exemptions** only through [`policy/exemptions.yaml`](policy/exemptions.yaml): owner, justification
 (>= 20 characters), approving architect who is not the owner, expiry within 12 months, backlog
@@ -126,7 +129,8 @@ packages/
   cap-policy-lint/          Tool 2 (CAP)
   create-cap-app/           Tool 1 (CAP): src/, templates/ (overlay), test/
   rap-scaffold/             Tool 1 (RAP): src/, examples/ (model + committed output), test/
-  abap-policy-lint/ ...     planned tools (skeletons)
+  abap-policy-lint/         Tool 2 (ABAP): rules, released-API catalogue, shared abaplint setup
+  sap-metadata/ ...         planned tools (skeletons)
 reference-apps/sales-orders committed output of create-cap-app, verified in CI
 scripts/                    repo guardrails: file-header check, workspace check
 docs/GUARDRAILS.md          binding clean-core and engineering rules
@@ -162,8 +166,8 @@ Rules for contributions (enforced in CI where possible):
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml): lint + header check, type check and tests on
 Node 22 and 24; regeneration of the reference app with a diff against the committed copy, then its
-own `npm run check` on Node 24; regeneration of the RAP example (with abaplint verification) and a diff
-against the committed output; gitleaks secret scan and `npm audit`. The pipeline has not run on
+own `npm run check` on Node 24; regeneration of the RAP example (with abaplint verification), a diff
+against the committed output and the ABAP clean-core gate on it with SAP's current released-API list; gitleaks secret scan and `npm audit`. The pipeline has not run on
 GitHub yet - the repository is local only.
 
 ## Known limitations

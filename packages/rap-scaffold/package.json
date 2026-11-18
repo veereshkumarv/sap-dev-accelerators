@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@abaplint/core": "2.120.109",
+    "@sapdx/abap-policy-lint": "0.1.0",
     "@sapdx/policy": "0.1.0",
     "yaml": "2.9.1"
   }
