@@ -1,0 +1,29 @@
+// What: UI metadata extension for ZC_SD_ITEM: Fiori elements list, object page and facets.
+// Why: Keeps UI annotations out of the data model and lets the customer layer adjust the UI.
+// If missing or unlinked: The Fiori elements preview shows no columns or facets; the service
+//     itself still works.
+@Metadata.layer: #CUSTOMER
+@UI: { headerInfo: { typeName: 'Sales Order Item',
+                     typeNamePlural: 'Sales Order Items',
+                     title: { type: #STANDARD, value: 'Product' } } }
+annotate entity ZC_SD_ITEM with
+{
+  @UI.facet: [ { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Sales Order Item', position: 10 } ]
+  @UI.hidden: true
+  ItemUUID;
+
+  @UI.hidden: true
+  OrderUUID;
+
+  @UI: { lineItem:       [ { position: 10 } ],
+         identification: [ { position: 10 } ] }
+  Product;
+
+  @UI: { lineItem:       [ { position: 20 } ],
+         identification: [ { position: 20 } ] }
+  Quantity;
+
+  @UI: { lineItem:       [ { position: 30 } ],
+         identification: [ { position: 30 } ] }
+  ItemText;
+}

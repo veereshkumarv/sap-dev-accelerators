@@ -1,0 +1,32 @@
+# What: Example RAP business-object model: sales order (root) with items (child), draft-enabled,
+#     protected by authorization object ZSD_ORDER.
+# Why: Shows every supported model feature and is the input of the committed example output in
+#     examples/out, which CI lints for clean-core compliance.
+# If missing or unlinked: The README example and the example-output regeneration in CI break;
+#     users have no reference model to start from.
+
+area: SD
+package: ZSD_ORDERS
+description: Sales order (RAP example)
+authorizationObject: ZSD_ORDER
+draft: true
+
+root:
+  name: ORDER
+  label: Sales Order
+  fields:
+    - { name: ORDER_ID, type: numc, length: 10, label: Order ID, readonly: true }
+    - { name: CUSTOMER, type: char, length: 10, label: Customer, mandatory: true }
+    - { name: DESCRIPTION, type: char, length: 80, label: Description }
+    - { name: ORDER_DATE, type: dats, label: Order Date, mandatory: true }
+    - { name: NET_AMOUNT, type: curr, length: 15, decimals: 2, currency: CURRENCY_CODE, label: Net Amount }
+    - { name: CURRENCY_CODE, type: cuky, label: Currency, mandatory: true }
+    - { name: STATUS, type: char, length: 1, label: Status, readonly: true }
+
+children:
+  - name: ITEM
+    label: Sales Order Item
+    fields:
+      - { name: PRODUCT, type: char, length: 40, label: Product, mandatory: true }
+      - { name: QUANTITY, type: int4, label: Quantity, mandatory: true }
+      - { name: ITEM_TEXT, type: char, length: 80, label: Item Text }

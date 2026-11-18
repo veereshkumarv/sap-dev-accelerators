@@ -1,0 +1,10 @@
+// What: Access control for ZC_SD_ORDER, inheriting the conditions of ZR_SD_ORDER.
+// Why: Projections must enforce the same authorization as the base view.
+// If missing or unlinked: The projection is not protected by an access control; ABAP-SEC-001 is
+//     violated.
+@EndUserText.label: 'Access control for ZC_SD_ORDER'
+@MappingRole: true
+define role ZC_SD_ORDER {
+  grant select on ZC_SD_ORDER
+    where inheriting conditions from entity ZR_SD_ORDER;
+}

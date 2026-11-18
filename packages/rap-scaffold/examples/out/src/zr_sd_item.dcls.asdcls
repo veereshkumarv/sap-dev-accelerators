@@ -1,0 +1,12 @@
+// What: Access control for ZR_SD_ITEM: read access requires authorization object ZSD_ORDER with
+//     ACTVT 03.
+// Why: Secure by default (rule ABAP-SEC-001): rows are only visible to users with the
+//     authorization.
+// If missing or unlinked: ZR_SD_ITEM declares #CHECK without a role: activation warns and all
+//     users would see no data or, if changed to #NOT_REQUIRED, all data.
+@EndUserText.label: 'Access control for ZR_SD_ITEM'
+@MappingRole: true
+define role ZR_SD_ITEM {
+  grant select on ZR_SD_ITEM
+    where ( ) = aspect pfcg_auth( ZSD_ORDER, ACTVT = '03' );
+}

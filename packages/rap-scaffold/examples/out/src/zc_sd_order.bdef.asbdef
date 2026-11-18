@@ -1,0 +1,32 @@
+// What: Projection behavior definition of ZC_SD_ORDER: operations exposed to the UI service.
+// Why: Only operations listed here are available to the service consumer.
+// If missing or unlinked: The UI service is read-only; create, update, delete and draft actions
+//     are not exposed.
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZC_SD_ORDER alias Order
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Item { create; with draft; }
+}
+
+define behavior for ZC_SD_ITEM alias Item
+use etag
+{
+  use update;
+  use delete;
+
+  use association _Order { with draft; }
+}

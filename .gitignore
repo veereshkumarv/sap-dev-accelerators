@@ -22,3 +22,6 @@ out/
 
 # Policy copy created by npm pack (prepack) in the policy package
 packages/policy/policy/
+
+# Committed generator output (RAP example), regenerated and diffed in CI
+!packages/rap-scaffold/examples/out/

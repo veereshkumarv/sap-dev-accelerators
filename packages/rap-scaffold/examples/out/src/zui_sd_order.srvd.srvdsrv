@@ -1,0 +1,9 @@
+// What: Service definition ZUI_SD_ORDER: exposes ZC_SD_ORDER, ZC_SD_ITEM.
+// Why: Defines the scope of the OData service bound by the service binding.
+// If missing or unlinked: The service binding has nothing to expose; no OData service exists.
+@EndUserText.label: 'Sales order (RAP example)'
+@ObjectModel.leadingEntity.name: 'ZC_SD_ORDER'
+define service ZUI_SD_ORDER {
+  expose ZC_SD_ORDER as Order;
+  expose ZC_SD_ITEM  as Item;
+}

@@ -24,7 +24,7 @@ quality feedback loops - with one central policy deciding what blocks a release.
 | - | Central policy engine + `sapdx-gate` | [`@sapdx/policy`](packages/policy) | ✅ built, 8 tests, 100 % line coverage |
 | 1 | CAP golden-path generator | [`@sapdx/create-cap-app`](packages/create-cap-app) | ✅ built, 20 tests; generated app passes lint, 15/15 tests, policy gate and `mbt build` |
 | 2 | CAP clean-core / security lint | [`@sapdx/cap-policy-lint`](packages/cap-policy-lint) | ✅ built, 12 rules, 27 tests |
-| 1 | RAP generator (abapGit output) | [`@sapdx/rap-scaffold`](packages/rap-scaffold) | ⏳ planned (next) |
+| 1 | RAP generator (abapGit output) | [`@sapdx/rap-scaffold`](packages/rap-scaffold) | ✅ built, 24 tests; output verified offline with abaplint (ABAP Cloud), not yet imported into a system |
 | 2 | ABAP clean-core lint (abaplint) | [`@sapdx/abap-policy-lint`](packages/abap-policy-lint) | ⏳ planned |
 | 3 | OData metadata, API diff, test generator | [`sap-metadata`](packages/sap-metadata), [`odata-diff`](packages/odata-diff), [`odata-testgen`](packages/odata-testgen) | ⏳ planned |
 | 4 | S/4HANA mock server | [`@sapdx/s4-mock`](packages/s4-mock) | ⏳ planned |
@@ -48,6 +48,7 @@ npm install
 npx create-cap-app sales-orders --dir ~/work --sapdx-source .
 cd ~/work/sales-orders
 npm run check            # ESLint + tests (coverage >= 80 %) + CAP policy gate
+cd -                     # back to the repository
 
 # Lint any CAP project against the central policy
 npx cap-policy-lint path/to/cap-project                      # text report, exit 1 on new Blocker/Critical
@@ -55,9 +56,12 @@ npx cap-policy-lint path/to/cap-project --format sarif --out cap.sarif
 
 # Merge SARIF from several tools and decide pass/fail centrally
 npx sapdx-gate cap.sarif other.sarif --baseline baseline.json
+
+# Generate a RAP business object (abapGit format, verified with abaplint)
+npx rap-scaffold --model packages/rap-scaffold/examples/sales-order.yaml --out ~/work/zsd-orders
 ```
 
-Tool details: [create-cap-app README](packages/create-cap-app/README.md).
+Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold](packages/rap-scaffold/README.md).
 
 ## How the pieces fit
 
@@ -112,7 +116,8 @@ packages/
   policy/                   policy loader/validation (JSON Schema), exemptions, naming, sapdx-gate
   cap-policy-lint/          Tool 2 (CAP)
   create-cap-app/           Tool 1 (CAP): src/, templates/ (overlay), test/
-  rap-scaffold/ ...         planned tools (skeletons)
+  rap-scaffold/             Tool 1 (RAP): src/, examples/ (model + committed output), test/
+  abap-policy-lint/ ...     planned tools (skeletons)
 reference-apps/sales-orders committed output of create-cap-app, verified in CI
 scripts/                    repo guardrails: file-header check, workspace check
 docs/GUARDRAILS.md          binding clean-core and engineering rules
@@ -148,13 +153,16 @@ Rules for contributions (enforced in CI where possible):
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml): lint + header check, type check and tests on
 Node 22 and 24; regeneration of the reference app with a diff against the committed copy, then its
-own `npm run check` on Node 24; gitleaks secret scan and `npm audit`. The pipeline has not run on
+own `npm run check` on Node 24; regeneration of the RAP example (with abaplint verification) and a diff
+against the committed output; gitleaks secret scan and `npm audit`. The pipeline has not run on
 GitHub yet - the repository is local only.
 
 ## Known limitations
 
 - No `cf deploy` has been executed (no BTP subaccount in the build environment); the MTA archive
   build is verified.
+- RAP output has not been imported into an SAP system; access controls, service definition and
+  binding are not syntax-checked offline (see the rap-scaffold README).
 - `create-cap-app` supports Cloud Foundry and single tenancy only; Kyma and multitenancy are
   rejected with a clear message until they can be verified.
 - Placeholders to replace before rollout: the `acme` namespace / npm scope in

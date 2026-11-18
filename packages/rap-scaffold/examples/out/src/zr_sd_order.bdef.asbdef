@@ -1,0 +1,86 @@
+// What: Behavior definition of ZR_SD_ORDER: managed, strict(2), draft-enabled, global
+//     authorization, mandatory-field validations, field mappings.
+// Why: Defines the transactional behavior of the business object (create/update/delete, locks,
+//     ETags, validations).
+// If missing or unlinked: The business object is read-only CDS; projection behavior, service and
+//     Fiori app cannot modify data.
+managed;
+strict ( 2 );
+with draft;
+
+define behavior for ZR_SD_ORDER alias Order
+implementation in class ZBP_R_SD_ORDER unique
+persistent table ZSD_ORDER
+draft table ZSD_ORDER_D
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+  association _Item { create; with draft; }
+
+  field ( numbering : managed, readonly ) OrderUUID;
+  field ( readonly ) OrderId, Status, LocalCreatedBy, LocalCreatedAt, LocalLastChangedBy, LocalLastChangedAt, LastChangedAt;
+  field ( mandatory ) Customer, OrderDate, CurrencyCode;
+
+  validation validateMandatory on save { create; field Customer, OrderDate, CurrencyCode; }
+
+  draft action Resume;
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft determine action Prepare
+  {
+    validation validateMandatory;
+    validation Item~validateMandatory;
+  }
+
+  mapping for zsd_order
+    {
+      OrderUUID          = order_uuid;
+      OrderId            = order_id;
+      Customer           = customer;
+      Description        = description;
+      OrderDate          = order_date;
+      NetAmount          = net_amount;
+      CurrencyCode       = currency_code;
+      Status             = status;
+      LocalCreatedBy     = local_created_by;
+      LocalCreatedAt     = local_created_at;
+      LocalLastChangedBy = local_last_changed_by;
+      LocalLastChangedAt = local_last_changed_at;
+      LastChangedAt      = last_changed_at;
+    }
+}
+
+define behavior for ZR_SD_ITEM alias Item
+implementation in class ZBP_R_SD_ORDER unique
+persistent table ZSD_ITEM
+draft table ZSD_ITEM_D
+lock dependent by _Order
+authorization dependent by _Order
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  association _Order { with draft; }
+
+  field ( numbering : managed, readonly ) ItemUUID;
+  field ( readonly ) OrderUUID, LocalLastChangedAt;
+  field ( mandatory ) Product, Quantity;
+
+  validation validateMandatory on save { create; field Product, Quantity; }
+
+  mapping for zsd_item
+    {
+      ItemUUID           = item_uuid;
+      OrderUUID          = order_uuid;
+      Product            = product;
+      Quantity           = quantity;
+      ItemText           = item_text;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}

@@ -16,7 +16,8 @@
   },
   "files": [
     "src",
-    "bin"
+    "bin",
+    "examples/sales-order.yaml"
   ],
   "engines": {
     "node": ">=22"
@@ -25,10 +26,8 @@
     "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
+    "@abaplint/core": "2.120.109",
     "@sapdx/policy": "0.1.0",
     "yaml": "2.9.1"
-  },
-  "devDependencies": {
-    "@abaplint/core": "2.120.109"
   }
 }

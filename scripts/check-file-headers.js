@@ -20,6 +20,7 @@ const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const EXCEPTIONS = [
   { pattern: /(^|\/)package-lock\.json$/, reason: 'rewritten by npm on every install' },
   { pattern: /(^|\/)reference-apps\/[^/]+\/xs-security\.json$/, reason: 'XSUAA descriptor; documented in the app docs/files.md' },
+  { pattern: /^packages\/rap-scaffold\/examples\/out\/.*\.xml$/, reason: 'abapGit XML metadata is regenerated on export; documented in examples/out/docs/files.md' },
 ];
 const BINARY = /\.(png|jpe?g|gif|ico|pdf|zip|mtar|sqlite|db)$/i;
 const HEADER_WINDOW_LINES = 40;
