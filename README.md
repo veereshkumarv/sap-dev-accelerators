@@ -38,7 +38,9 @@ observability kit, PR bot) are not started.
 ## Quick start
 
 Requirements: **Node.js 22 or 24** for the accelerators; **Node.js 24 LTS** for generated CAP
-projects (the CAP 10 HANA deployer requires it, SAP libraries reject Node 26). Git.
+projects (the CAP 10 HANA deployer requires it, SAP libraries reject Node 26). Git. To import
+generated RAP objects: an ABAP Cloud system (BTP ABAP Environment or S/4HANA) with abapGit or gCTS
+(e.g. via Eclipse ADT), and the authorization object named in the model (field `ACTVT`).
 
 ```sh
 git clone <repo-url> sap-dev-accelerators && cd sap-dev-accelerators
@@ -66,18 +68,23 @@ Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold
 ## How the pieces fit
 
 ```
-                 policy/ (rules, severities, exemptions, naming, forbidden objects)
-                                        |
-             +--------------------------+---------------------------+
-             |                          |                           |
-   create-cap-app (Tool 1)     cap-policy-lint (Tool 2)    other checkers (planned)
-   generates compliant         CAP rules -> findings       ABAP lint, OData diff, ...
-   projects                              |                           |
-             |                           +------------ SARIF --------+
-             v                                         |
-   reference-apps/sales-orders                  sapdx-gate (central gate)
-   (regenerated + checked in CI)                new Blocker/Critical -> fail
+                    policy/ (rules, severities, exemptions, naming, forbidden objects)
+                                           |
+        +------------------+---------------+---------------+---------------------------+
+        |                  |                               |                           |
+  create-cap-app     rap-scaffold                  cap-policy-lint            other checkers (planned)
+  (Tool 1, CAP)      (Tool 1, RAP)                 (Tool 2, CAP)              ABAP lint, OData diff, ...
+  CAP project        abapGit repository            CAP rules -> findings               |
+        |            verified with abaplint                |                           |
+        |                  |                               +---------- SARIF ----------+
+        v                  v                                             |
+  reference-apps/    packages/rap-scaffold/                      sapdx-gate (central gate)
+  sales-orders       examples/out                                new Blocker/Critical -> fail
+  (regenerated + checked in CI)
 ```
+
+Both generators take their object names from `policy/naming.yaml`, so generated code passes the
+naming rules by construction.
 
 - **One findings format.** Every checker emits SARIF 2.1.0 through `@sapdx/findings`, so results
   merge, show up in GitHub code scanning and feed the gate.
@@ -96,8 +103,10 @@ Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold
 | Major | performance risk, missing tests, poor error handling | reported |
 | Minor | naming, documentation, maintainability | reported |
 
-The catalog defines 35 rules (12 CAP, 14 ABAP, 7 OData, 2 policy); CAP rules are implemented,
-ABAP and OData rules are specified for the planned tools.
+The catalog defines 35 rules (12 CAP, 14 ABAP, 7 OData, 2 policy). CAP rules are implemented in
+`cap-policy-lint`. ABAP and OData rules are specified for the planned checkers: `rap-scaffold`
+already generates code that follows the ABAP rules (released APIs, `#CHECK` access control,
+authorization, tests), but no ABAP gate checks it until `abap-policy-lint` is built.
 
 **Exemptions** only through [`policy/exemptions.yaml`](policy/exemptions.yaml): owner, justification
 (>= 20 characters), approving architect who is not the owner, expiry within 12 months, backlog
