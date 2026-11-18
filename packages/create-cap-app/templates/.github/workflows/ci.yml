@@ -1,0 +1,72 @@
+{{!
+What: Template for .github/workflows/ci.yml - the CI pipeline of generated CAP projects.
+Why: Every generated project gets the same quality gates (lint, tests, CAP policy gate, secret
+    scan, dependency audit, MTA build) without per-team pipeline work.
+If missing or unlinked: create-cap-app stops with "template not found"; generated projects would
+    have no automated checks on push or pull request.
+}}
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - name: CAP clean-core and security policy
+        # npm run / --no-install: never let npx fall back to an unvetted public package.
+        run: npm run policy:sarif
+      - name: Central quality gate
+        if: always()
+        run: npx --no-install sapdx-gate reports/cap-policy.sarif
+      - name: Publish findings to code scanning
+        if: always() && hashFiles('reports/cap-policy.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: reports/cap-policy.sarif
+          category: cap-policy
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Dependency audit
+        run: npm audit --omit=dev --audit-level=high
+
+  build:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Build MTA archive
+        run: npx --yes mbt@1.2.53 build -t mta_archives
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mtar
+          path: mta_archives/*.mtar

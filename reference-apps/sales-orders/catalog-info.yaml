@@ -1,0 +1,19 @@
+# What: Backstage catalog entry: owner, lifecycle and API version of this service.
+# Why: Ownership and versioning are needed for impact analysis and are enforced by CAP-API-001.
+# If missing or unlinked: The service has no recorded owner or API version and the policy gate
+#     reports CAP-API-001.
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sales-orders
+  description: CAP service SalesOrdersService (Sales Orders)
+  annotations:
+    sapdx.io/api-version: 0.1.0
+spec:
+  type: service
+  # Replace with the owning team before the first release.
+  owner: team-sales-orders
+  lifecycle: experimental
+  providesApis:
+    - sales-orders-odata

@@ -17,7 +17,10 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 
 /** Files that cannot carry a header, with the reason. */
-const EXCEPTIONS = new Map([['package-lock.json', 'rewritten by npm on every install']]);
+const EXCEPTIONS = [
+  { pattern: /(^|\/)package-lock\.json$/, reason: 'rewritten by npm on every install' },
+  { pattern: /(^|\/)reference-apps\/[^/]+\/xs-security\.json$/, reason: 'XSUAA descriptor; documented in the app docs/files.md' },
+];
 const BINARY = /\.(png|jpe?g|gif|ico|pdf|zip|mtar|sqlite|db)$/i;
 const HEADER_WINDOW_LINES = 40;
 const MARKERS = [
@@ -33,16 +36,18 @@ const MARKERS = [
  * @param {string} text
  */
 export function headerOf(file, text) {
-  if (file.endsWith('.json') && !file.endsWith('tsconfig.json')) {
+  const leading = text.split('\n').slice(0, HEADER_WINDOW_LINES).join('\n');
+  if (file.endsWith('.json')) {
     try {
       const doc = JSON.parse(text);
       const value = doc?.['//'] ?? doc?.$comment;
       return Array.isArray(value) ? value.join('\n') : String(value ?? '');
     } catch {
-      return '';
+      // JSON with comments (tsconfig.json, .vscode/*.json): the header is a leading comment.
+      return leading;
     }
   }
-  return text.split('\n').slice(0, HEADER_WINDOW_LINES).join('\n');
+  return leading;
 }
 
 /**
@@ -59,7 +64,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const files = execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard'], { cwd: root, encoding: 'utf8' })
     .split('\n')
     .filter(Boolean)
-    .filter((f) => !EXCEPTIONS.has(f) && !BINARY.test(f));
+    .filter((f) => !EXCEPTIONS.some((e) => e.pattern.test(f)) && !BINARY.test(f));
 
   /** @type {string[]} */
   const problems = [];

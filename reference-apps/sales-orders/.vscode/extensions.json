@@ -1,0 +1,13 @@
+// What: Recommended VS Code extensions for CAP development.
+// Why: Gives every developer the same CDS language support and tooling.
+// If missing or unlinked: No extension recommendations; developers may work without CDS language
+//     support.
+{
+	"recommendations": [
+		"SAPSE.vscode-cds",
+		"dbaeumer.vscode-eslint",
+		"mechatroner.rainbow-csv",
+		"qwtel.sqlite-viewer",
+		"humao.rest-client"
+	]
+}

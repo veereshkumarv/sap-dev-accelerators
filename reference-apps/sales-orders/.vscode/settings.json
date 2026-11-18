@@ -1,0 +1,16 @@
+// What: Workspace settings for VS Code in this project.
+// Why: Shared editor behaviour for the team.
+// If missing or unlinked: Editors fall back to personal settings.
+{
+  "eslint.validate": [
+    "cds",
+    "csn",
+    "csv",
+    "csv (semicolon)",
+    "tsv",
+    "tab",
+    "javascript",
+    "typescript",
+    "java"
+  ]
+}

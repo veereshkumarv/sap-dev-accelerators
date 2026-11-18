@@ -1,0 +1,30 @@
+# What: Files Git must not track: node_modules, gen/, MTA archives, local credentials
+#     (default-env.json, .cdsrc-private.json), SQLite files, reports.
+# Why: Prevents committing secrets and build output.
+# If missing or unlinked: Credentials and build artefacts can be committed; the secret scan in CI
+#     then fails.
+
+node_modules/
+target/
+_out/
+gen/
+.cds/
+
+.cdsrc-private.json
+default-*.json
+*.sqlite
+
+# MTA
+mta_archives/
+*_mta_build_tmp
+*.mtar
+
+# Other
+.DS_Store
+
+# @cap-js/cds-typer
+@cds-models
+
+# Quality reports
+reports/
+coverage/

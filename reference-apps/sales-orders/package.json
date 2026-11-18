@@ -1,0 +1,62 @@
+{
+  "//": [
+    "What: npm manifest of @acme/sales-orders: CAP dependencies, scripts (start, test, lint, policy, check) and cds configuration (mocked users, XSUAA in production).",
+    "Why: Created by cds init and extended with the organisation scripts and policy tooling.",
+    "If missing or unlinked: Nothing installs or starts; cds configuration (auth, db, destinations) is lost."
+  ],
+  "name": "@acme/sales-orders",
+  "version": "1.0.0",
+  "description": "CAP service SalesOrdersService (Sales Orders)",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^24"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "lint": "eslint .",
+    "test": "node --test --experimental-test-coverage --test-coverage-include=\"srv/**\" --test-coverage-include=server.js --test-coverage-lines=80 --test-coverage-functions=80 \"test/*.test.js\"",
+    "policy": "cap-policy-lint .",
+    "policy:sarif": "cap-policy-lint . --format sarif --out reports/cap-policy.sarif",
+    "check": "npm run lint && npm test && npm run policy"
+  },
+  "dependencies": {
+    "@cap-js/hana": "^3",
+    "@sap/cds": "^10",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "1.0.2",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^10",
+    "@sap/eslint-plugin-cds": "^4",
+    "@sapdx/cap-policy-lint": "file:../../packages/cap-policy-lint",
+    "@sapdx/policy": "file:../../packages/policy",
+    "eslint": "^10"
+  },
+  "cds": {
+    "requires": {
+      "[production]": {
+        "auth": "xsuaa"
+      },
+      "destinations": true,
+      "application-logging": true,
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "alice": {
+            "roles": [
+              "Admin"
+            ]
+          },
+          "bob": {
+            "roles": [
+              "Viewer"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

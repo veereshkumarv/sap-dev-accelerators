@@ -1,0 +1,21 @@
+{{!
+What: Template for catalog-info.yaml - Backstage catalog entry with owner, lifecycle and API
+    version.
+Why: Ownership and API versioning are required by CAP-API-001 and feed impact analysis.
+If missing or unlinked: create-cap-app stops with "template not found"; generated projects fail
+    CAP-API-001 in the policy gate.
+}}
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: {{projectName}}
+  description: CAP service {{service}} ({{entityLabel}})
+  annotations:
+    sapdx.io/api-version: 0.1.0
+spec:
+  type: service
+  # Replace with the owning team before the first release.
+  owner: team-{{projectName}}
+  lifecycle: experimental
+  providesApis:
+    - {{projectName}}-odata

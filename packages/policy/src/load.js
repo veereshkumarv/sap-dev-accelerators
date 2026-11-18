@@ -6,6 +6,7 @@
  * If missing or unlinked: No tool can obtain rules, exemptions or naming; every lint and gate run
  *     aborts.
  */
+import { existsSync } from 'node:fs';
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -50,8 +51,13 @@ import addFormatsModule from 'ajv-formats';
 
 const addFormats = /** @type {any} */ (addFormatsModule).default ?? addFormatsModule;
 const SCHEMA_DIR = fileURLToPath(new URL('../schemas/', import.meta.url));
-/** Repository default policy (used when no --policy dir and none found upwards). */
-export const BUNDLED_POLICY_DIR = fileURLToPath(new URL('../../../policy/', import.meta.url));
+/** Policy copied into the package at pack time (registry installs). */
+const PACKAGED_POLICY_DIR = fileURLToPath(new URL('../policy/', import.meta.url));
+/** Default policy when no --policy dir is given and none is found upwards: the packaged copy,
+ *  or the repository policy/ folder when running from the monorepo. */
+export const BUNDLED_POLICY_DIR = existsSync(path.join(PACKAGED_POLICY_DIR, 'rules.yaml'))
+  ? PACKAGED_POLICY_DIR
+  : fileURLToPath(new URL('../../../policy/', import.meta.url));
 const MAX_EXEMPTION_DAYS = 366;
 
 export class PolicyError extends Error {

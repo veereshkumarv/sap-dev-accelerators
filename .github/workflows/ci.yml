@@ -38,8 +38,8 @@ jobs:
       - run: npm run typecheck
       - run: npm test
 
-  dogfood:
-    name: clean-core gates on generated and reference code
+  reference-app:
+    name: generated CAP reference app passes its own gates (Node 24)
     runs-on: ubuntu-latest
     needs: quality
     permissions:
@@ -49,20 +49,27 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci
-      - name: Lint generated RAP example (ABAP clean core)
-        run: npx abap-policy-lint packages/rap-scaffold/examples/out --format sarif --out abap.sarif
-      - name: Lint CAP reference app
-        run: npx cap-policy-lint reference-apps/cap-sales-order --format sarif --out cap.sarif
-      - name: Central gate
-        run: npx sapdx-gate abap.sarif cap.sarif --out merged.sarif
+      - name: Regenerate and compare with the committed reference app
+        run: |
+          node packages/create-cap-app/bin/create-cap-app.js sales-orders --dir "$RUNNER_TEMP" --sapdx-source . --skip-install
+          diff -r --exclude=package.json --exclude=package-lock.json --exclude=node_modules "$RUNNER_TEMP/sales-orders" reference-apps/sales-orders
+      - name: Install reference app
+        run: npm ci
+        working-directory: reference-apps/sales-orders
+      - name: Lint, test and policy gate inside the reference app
+        run: npm run check
+        working-directory: reference-apps/sales-orders
+      - name: CAP policy findings as SARIF
+        if: always()
+        run: node packages/cap-policy-lint/bin/cap-policy-lint.js reference-apps/sales-orders --format sarif --out cap.sarif
       - uses: github/codeql-action/upload-sarif@v3
-        if: always() && hashFiles('merged.sarif') != ''
+        if: always() && hashFiles('cap.sarif') != ''
         with:
-          sarif_file: merged.sarif
-          category: sapdx-gate
+          sarif_file: cap.sarif
+          category: cap-reference-app
 
   security:
     name: secrets and dependencies

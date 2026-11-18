@@ -1,0 +1,13 @@
+// What: VS Code tasks (for example cds watch) used by the debug configurations.
+// Why: launch.json refers to these tasks.
+// If missing or unlinked: Debug configurations that depend on these tasks fail to start.
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "cds watch",
+      "command": "cds watch",
+    }
+  ]
+}

@@ -19,3 +19,6 @@ mta_archives/
 *.db
 tmp/
 out/
+
+# Policy copy created by npm pack (prepack) in the policy package
+packages/policy/policy/

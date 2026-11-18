@@ -17,13 +17,16 @@
   "files": [
     "src",
     "bin",
-    "schemas"
+    "schemas",
+    "policy"
   ],
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=90 --test-coverage-include=src/** \"test/*.test.js\""
+    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=90 --test-coverage-branches=80 --test-coverage-functions=90 --test-coverage-include=src/** \"test/*.test.js\"",
+    "prepack": "node -e \"require('fs').cpSync('../../policy', 'policy', { recursive: true })\"",
+    "postpack": "node -e \"require('fs').rmSync('policy', { recursive: true, force: true })\""
   },
   "dependencies": {
     "@sapdx/findings": "0.1.0",
