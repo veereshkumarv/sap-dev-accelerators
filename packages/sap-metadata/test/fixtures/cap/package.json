@@ -1,0 +1,9 @@
+{
+  "//": [
+    "What: Test fixture - minimal CAP project manifest for sap-metadata tests.",
+    "Why: Proves loading a service model straight from a CAP project folder.",
+    "If missing or unlinked: The CAP-project loading tests fail."
+  ],
+  "name": "metadata-fixture",
+  "private": true
+}

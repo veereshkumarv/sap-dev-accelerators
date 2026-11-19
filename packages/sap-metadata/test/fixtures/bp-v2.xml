@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+What: Test fixture - S/4HANA-style OData V2 $metadata (API_BUSINESS_PARTNER subset) with sap: attributes.
+Why: Proves V2 normalisation: version detection, sap:creatable/updatable/deletable, function imports.
+If missing or unlinked: The V2 metadata tests lose their input and fail.
+-->
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+ <edmx:DataServices m:DataServiceVersion="2.0">
+  <Schema Namespace="API_BUSINESS_PARTNER" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+   <EntityType Name="A_BusinessPartnerType" sap:content-version="1">
+    <Key><PropertyRef Name="BusinessPartner"/></Key>
+    <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Business Partner"/>
+    <Property Name="BusinessPartnerCategory" Type="Edm.String" Nullable="false" MaxLength="1" sap:label="Category"/>
+    <Property Name="BusinessPartnerFullName" Type="Edm.String" MaxLength="81" sap:label="Full Name" sap:creatable="false" sap:updatable="false"/>
+    <Property Name="LastChangeDate" Type="Edm.DateTime" Precision="0" ConcurrencyMode="Fixed" sap:updatable="false"/>
+   </EntityType>
+   <EntityContainer Name="API_BUSINESS_PARTNER_Entities" m:IsDefaultEntityContainer="true">
+    <EntitySet Name="A_BusinessPartner" EntityType="API_BUSINESS_PARTNER.A_BusinessPartnerType" sap:deletable="false" sap:content-version="1"/>
+    <FunctionImport Name="CheckPartner" ReturnType="Edm.Boolean" m:HttpMethod="GET"><Parameter Name="BusinessPartner" Type="Edm.String" Mode="In" MaxLength="10"/></FunctionImport>
+   </EntityContainer>
+  </Schema>
+ </edmx:DataServices>
+</edmx:Edmx>

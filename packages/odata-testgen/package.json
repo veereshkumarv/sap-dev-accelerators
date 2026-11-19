@@ -22,10 +22,14 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
     "@sapdx/sap-metadata": "0.1.0",
     "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "1.0.2",
+    "@cap-js/sqlite": "3.1.3"
   }
 }

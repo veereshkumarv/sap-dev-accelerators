@@ -23,7 +23,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test --experimental-test-coverage --test-coverage-include-all --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** \"test/*.test.js\""
   },
   "dependencies": {
     "@abaplint/core": "2.120.109",

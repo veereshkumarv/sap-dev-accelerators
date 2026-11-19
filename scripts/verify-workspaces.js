@@ -27,6 +27,10 @@ for (const pattern of rootPkg.workspaces) {
     const tests = (await listFiles(path.join(dir, 'test'))).filter((f) => /\.test\.(c|m)?js$/.test(f));
     if (tests.length === 0) problems.push(`${pkg.name}: no test/*.test.js files`);
     if (!/--test-coverage-lines=\d+/.test(pkg.scripts?.test ?? '')) problems.push(`${pkg.name}: test script has no coverage threshold`);
+    // Node 22/24 coverage only counts loaded files (--test-coverage-include-all is Node 26+), so
+    // every source file must be reachable from an entry point; unreachable code would escape coverage.
+    const entries = [...Object.values(typeof pkg.exports === 'object' ? pkg.exports : { '.': pkg.exports ?? '' }), ...Object.values(pkg.bin ?? {})];
+    for (const file of await unreachableSources(dir, entries.filter(Boolean))) problems.push(`${pkg.name}: ${file} is not imported from any entry point (untested or dead code)`);
   }
 }
 
@@ -44,6 +48,36 @@ async function exists(file) {
   } catch {
     return false;
   }
+}
+
+/**
+ * Source files below src/ that no entry point reaches through relative imports.
+ * @param {string} dir      package directory
+ * @param {string[]} entries entry files relative to the package
+ */
+async function unreachableSources(dir, entries) {
+  const srcDir = path.join(dir, 'src');
+  const sources = (await readdir(srcDir, { withFileTypes: true, recursive: true }).catch(() => []))
+    .filter((e) => e.isFile() && /\.(c|m)?js$/.test(e.name))
+    .map((e) => path.join(e.parentPath, e.name));
+  /** @type {Set<string>} */
+  const seen = new Set();
+  const queue = entries.map((e) => path.resolve(dir, e));
+  while (queue.length) {
+    const file = /** @type {string} */ (queue.pop());
+    if (seen.has(file)) continue;
+    seen.add(file);
+    let text;
+    try {
+      text = await readFile(file, 'utf8');
+    } catch {
+      continue;
+    }
+    for (const m of text.matchAll(/(?:from\s+|import\s*\(\s*|require\s*\(\s*)['"](\.{1,2}\/[^'"]+)['"]/g)) {
+      queue.push(path.resolve(path.dirname(file), m[1]));
+    }
+  }
+  return sources.filter((s) => !seen.has(s)).map((s) => path.relative(dir, s).replaceAll('\\', '/'));
 }
 
 /**

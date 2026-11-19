@@ -209,6 +209,11 @@ rules:
     title: Key changed
     severity: critical
     tool: odata-diff
+  - id: ODATA-BRK-007
+    title: Write capability removed or ETag newly required
+    severity: critical
+    tool: odata-diff
+    description: Clients that create, update or delete (or update without If-Match) stop working - e.g. an entity set became read-only, a property became computed, or an ETag was introduced.
   - id: ODATA-CHG-001
     title: Additive API change
     severity: minor

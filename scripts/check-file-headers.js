@@ -19,6 +19,7 @@ const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 /** Files that cannot carry a header, with the reason. */
 const EXCEPTIONS = [
   { pattern: /(^|\/)package-lock\.json$/, reason: 'rewritten by npm on every install' },
+  { pattern: /^\.nvmrc$/, reason: 'version managers read the single line verbatim; documented in README' },
   { pattern: /(^|\/)reference-apps\/[^/]+\/xs-security\.json$/, reason: 'XSUAA descriptor; documented in the app docs/files.md' },
   { pattern: /^packages\/rap-scaffold\/examples\/out\/.*\.xml$/, reason: 'abapGit XML metadata is regenerated on export; documented in examples/out/docs/files.md' },
 ];
