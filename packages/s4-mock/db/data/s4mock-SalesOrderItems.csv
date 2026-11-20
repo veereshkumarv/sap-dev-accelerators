@@ -1,0 +1,2 @@
+SalesOrder;SalesOrderItem;Material;RequestedQuantity;RequestedQuantityUnit;NetAmount
+1000000;000010;TG11;5.000;PC;250.000

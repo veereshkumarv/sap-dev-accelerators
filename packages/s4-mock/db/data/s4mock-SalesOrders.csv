@@ -1,0 +1,2 @@
+SalesOrder;SalesOrderType;SalesOrganization;DistributionChannel;OrganizationDivision;SoldToParty;CreationDate;TotalNetAmount;TransactionCurrency;OverallSDProcessStatus;TotalCreditCheckStatus
+1000000;OR;1010;10;00;1000001;2026-01-15;250.000;EUR;A;A

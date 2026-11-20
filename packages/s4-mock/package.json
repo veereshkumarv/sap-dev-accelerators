@@ -15,16 +15,18 @@
     "s4-mock": "./bin/s4-mock.js"
   },
   "files": [
+    "index.js",
+    "server.js",
+    "src",
     "srv",
     "db",
-    "bin",
-    "index.js"
+    "bin"
   ],
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test \"test/*.test.js\"",
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=85 --test-coverage-branches=75 --test-coverage-functions=85 --test-coverage-include=src/** --test-coverage-include=srv/** --test-coverage-include=server.js \"test/*.test.js\"",
     "start": "cds-serve"
   },
   "dependencies": {
@@ -32,5 +34,37 @@
     "@cap-js/sqlite": "3.1.3",
     "@sap/cds": "10.2.2",
     "express": "5.3.0"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": ":memory:"
+        }
+      },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "S4USER": {
+            "password": "mock",
+            "roles": [
+              "S4Reader",
+              "S4Writer"
+            ]
+          },
+          "READONLY": {
+            "password": "mock",
+            "roles": [
+              "S4Reader"
+            ]
+          }
+        }
+      }
+    },
+    "cov2ap": {
+      "path": "sap/opu/odata/sap"
+    },
+    "s4mock": {}
   }
 }

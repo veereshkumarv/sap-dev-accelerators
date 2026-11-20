@@ -1,0 +1,5 @@
+BusinessPartner;AddressID;CityName;Country;PostalCode;StreetName
+1000001;1;Walldorf;DE;69190;Dietmar-Hopp-Allee
+1000002;1;Newtown Square;US;19073;Atlantic Avenue
+1000003;1;Berlin;DE;10115;Musterstrasse
+1000009;1;Hamburg;DE;20095;Sperrweg

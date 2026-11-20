@@ -1,0 +1,5 @@
+BusinessPartner;BusinessPartnerCategory;BusinessPartnerFullName;FirstName;LastName;OrganizationBPName1;BusinessPartnerIsBlocked
+1000001;2;Inlandkunde DE 1;;;Inlandkunde DE 1;false
+1000002;2;Domestic Customer US 1;;;Domestic Customer US 1;false
+1000003;1;Erika Mustermann;Erika;Mustermann;;false
+1000009;2;Blocked Customer GmbH;;;Blocked Customer GmbH;true
