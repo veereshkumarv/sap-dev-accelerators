@@ -28,12 +28,15 @@ quality feedback loops - with one central policy deciding what blocks a release.
 | 2 | ABAP clean-core lint (abaplint) | [`@sapdx/abap-policy-lint`](packages/abap-policy-lint) | ✅ built, 17 rules, 10 tests; checks against SAP's released-API list; generated RAP example passes |
 | 3 | OData metadata, API diff, test generator | [`sap-metadata`](packages/sap-metadata), [`odata-diff`](packages/odata-diff), [`odata-testgen`](packages/odata-testgen) | ✅ built, 8 + 9 + 10 tests; generated tests pass against real CAP apps (node:test 22/22 and 32/32, Newman 30/30) |
 | 4 | S/4HANA mock server | [`@sapdx/s4-mock`](packages/s4-mock) | ✅ built, 29 tests; V2/V4 on the real S/4 paths, sales order behaviour, fault injection, CloudEvents |
-| 5 | Transport / deployment readiness (R/A/G) | [`@sapdx/readiness`](packages/readiness) | ⏳ planned |
+| 5 | Transport / deployment readiness (R/A/G) | [`@sapdx/readiness`](packages/readiness) | ✅ built, 13 checks, 16 tests; Green for DEV/QA/PROD on real evidence from the reference app, run in CI |
 
-Planned packages exist as skeletons (manifest and folders only). The workspace guardrail makes
-`npm test` **fail** until each one has an entry point and tests - an unbuilt tool can never look
-green. Tools 6-10 of the build plan (BO scaffolder, impact analysis, self-service portal,
-observability kit, PR bot) are not started.
+Tools 1-5 are complete and `npm test` passes for the whole workspace (171 tests). The workspace
+guardrail keeps it honest: a package without entry point, tests or coverage threshold fails
+`npm test`, so an unbuilt tool can never look green. Tools 6-10 of the build plan (BO scaffolder,
+impact analysis, self-service portal, observability kit, PR bot) are not started.
+
+**New here? Read [docs/USAGE.md](docs/USAGE.md)** - how to bring the tools into your CAP or RAP
+project and use them from the first commit to the production release.
 
 ## Quick start
 
@@ -79,9 +82,13 @@ npx odata-testgen --input metadata.xml --emit postman --roles roles.yaml --base-
 # Local S/4HANA stand-in (Business Partner, Sales Order, Product APIs; faults on demand)
 npx s4-mock --port 4005
 curl -u S4USER:mock -H "x-mock-fault: 429" http://localhost:4005/sap/opu/odata/sap/API_SALES_ORDER_SRV/A_SalesOrder
+
+# Release decision (Red/Amber/Green) from pipeline evidence - here the committed example
+npx sapdx-readiness check --evidence packages/readiness/examples/evidence --target PROD
+npx sapdx-readiness init      # evidence/evidence.yaml template for your project
 ```
 
-Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold](packages/rap-scaffold/README.md), [abap-policy-lint](packages/abap-policy-lint/README.md), [odata-diff](packages/odata-diff/README.md), [odata-testgen](packages/odata-testgen/README.md), [sap-metadata](packages/sap-metadata/README.md), [s4-mock](packages/s4-mock/README.md).
+Tool details: [create-cap-app](packages/create-cap-app/README.md), [cap-policy-lint](packages/cap-policy-lint/README.md), [policy / sapdx-gate](packages/policy/README.md), [rap-scaffold](packages/rap-scaffold/README.md), [abap-policy-lint](packages/abap-policy-lint/README.md), [odata-diff](packages/odata-diff/README.md), [odata-testgen](packages/odata-testgen/README.md), [sap-metadata](packages/sap-metadata/README.md), [s4-mock](packages/s4-mock/README.md), [readiness](packages/readiness/README.md), [findings](packages/findings/README.md). End to end: [docs/USAGE.md](docs/USAGE.md).
 
 ## How the pieces fit
 
@@ -98,12 +105,18 @@ Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold
         v                  v                                             |
   reference-apps/    packages/rap-scaffold/                      sapdx-gate (central gate)
   sales-orders       examples/out                                new Blocker/Critical -> fail
-  (regenerated + checked in CI)
+  (regenerated + checked in CI)                                          |
+                                                                         v
+        tests (JUnit), coverage, npm audit, secret scan,     sapdx-readiness (Tool 5)
+        API diff, evidence.yaml (change record, rollback) -> DEV / QA / PROD: RED / AMBER / GREEN
 ```
 
 Both generators take their object names from `policy/naming.yaml`, so generated code passes the
 naming rules by construction. `odata-testgen` (Tool 3) reads the same service model as
-`odata-diff` (via `sap-metadata`) and produces tests rather than findings.
+`odata-diff` (via `sap-metadata`) and produces tests rather than findings. `s4-mock` (Tool 4) is
+the S/4HANA stand-in those tests and CAP consumers run against. `sapdx-readiness` (Tool 5) takes
+the SARIF of all checkers plus test, coverage, audit and release evidence and decides whether a
+release may go to a target.
 
 - **One findings format.** Every checker emits SARIF 2.1.0 through `@sapdx/findings`, so results
   merge, show up in GitHub code scanning and feed the gate.
@@ -122,9 +135,15 @@ naming rules by construction. `odata-testgen` (Tool 3) reads the same service mo
 | Major | performance risk, missing tests, poor error handling | reported |
 | Minor | naming, documentation, maintainability | reported |
 
-The catalog defines 39 rules (12 CAP, 17 ABAP, 8 OData, 2 policy), all implemented: CAP rules in
-`cap-policy-lint`, ABAP rules in `abap-policy-lint` (offline layer; ATC in the system stays
-authoritative), OData compatibility rules in `odata-diff`.
+The catalog defines 52 rules (12 CAP, 17 ABAP, 8 OData, 13 release readiness, 2 policy), all
+implemented: CAP rules in `cap-policy-lint`, ABAP rules in `abap-policy-lint` (offline layer; ATC
+in the system stays authoritative), OData compatibility rules in `odata-diff`, readiness checks
+(`RDY-*`) in `sapdx-readiness`.
+
+**Release decision** ([`policy/readiness.yaml`](policy/readiness.yaml)): each target (DEV, QA,
+PROD) lists its mandatory evidence and coverage thresholds. Red when a Blocker/Critical check fails
+or mandatory evidence is missing, Amber on warnings or failed Major checks, Green otherwise -
+never averaged.
 
 **Exemptions** only through [`policy/exemptions.yaml`](policy/exemptions.yaml): owner, justification
 (>= 20 characters), approving architect who is not the owner, expiry within 12 months, backlog
@@ -137,7 +156,8 @@ Clean-core and engineering rules: [docs/GUARDRAILS.md](docs/GUARDRAILS.md).
 ## Repository layout
 
 ```
-policy/                     central rule catalog, exemptions, naming, forbidden SAP objects
+policy/                     central rule catalog, exemptions, naming, forbidden SAP objects,
+                            release-readiness targets
 packages/
   findings/                 finding model, SARIF conversion, baseline gate
   policy/                   policy loader/validation (JSON Schema), exemptions, naming, sapdx-gate
@@ -149,9 +169,10 @@ packages/
   odata-diff/               Tool 3: breaking-change detection, API snapshots
   odata-testgen/            Tool 3: node:test and Postman test generation
   s4-mock/                  Tool 4: S/4HANA API mock (CAP app: db/, srv/, server.js, src/)
-  readiness/                planned tool (skeleton)
+  readiness/                Tool 5: evidence collection, RDY-* checks, R/A/G decision, examples/evidence
 reference-apps/sales-orders committed output of create-cap-app, verified in CI
 scripts/                    repo guardrails: file-header check, workspace check
+docs/USAGE.md               end-to-end guide: using the tools in a project, CI pipeline, brownfield
 docs/GUARDRAILS.md          binding clean-core and engineering rules
 .github/                    CI pipeline, CODEOWNERS, PR template
 ```
@@ -164,10 +185,6 @@ npm run typecheck                   # tsc --checkJs (strict) over all sources
 npm test -w packages/<name>         # one package, with its coverage threshold
 npm test                            # workspace guardrail + all packages
 ```
-
-> `npm test` and therefore `npm run check` currently **fail by design**: the workspace guardrail
-> reports the planned packages that are not built yet. Run package tests individually until all
-> tools exist.
 
 Rules for contributions (enforced in CI where possible):
 
@@ -185,7 +202,8 @@ Rules for contributions (enforced in CI where possible):
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml): lint + header check, type check and tests on
 Node 22 and 24; regeneration of the reference app with a diff against the committed copy, then its
-own `npm run check` on Node 24; regeneration of the RAP example (with abaplint verification), a diff
+own `npm run check` on Node 24 and a release-readiness decision (QA rules) on evidence produced in
+the same run - tests, coverage, generated API contract tests, CAP findings, `npm audit`; regeneration of the RAP example (with abaplint verification), a diff
 against the committed output and the ABAP clean-core gate on it with SAP's current released-API list; gitleaks secret scan and `npm audit`. The pipeline has not run on
 GitHub yet - the repository is local only.
 
