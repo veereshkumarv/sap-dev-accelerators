@@ -1,0 +1,10 @@
+# What: Test fixture - roles.yaml for EDMX inputs (users, service requirement, per-set and per-operation permissions).
+# Why: Proves authorization tests can be generated for services that are not CAP projects (RAP, S/4).
+# If missing or unlinked: The roles-file tests of odata-testgen fail.
+users:
+  admin: { roles: [Admin], password: "" }
+  viewer: { roles: [Viewer] }
+requires: authenticated-user
+permissions:
+  A_BusinessPartner: { read: [Viewer, Admin], write: [Admin] }
+  CheckPartner: [Admin]

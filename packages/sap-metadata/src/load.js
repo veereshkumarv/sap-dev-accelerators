@@ -69,6 +69,30 @@ export async function loadCsn(dir) {
   return files?.length ? cds.load(files, { cwd: dir }) : undefined;
 }
 
+/**
+ * CAP project facts needed for test generation: mocked users as CAP resolves them (project
+ * configuration merged with CAP defaults) and the URL path of each service.
+ * @param {string} dir
+ * @returns {Promise<{ users: Record<string, any>, paths: Record<string, string> }>}
+ */
+export async function loadCapProjectInfo(dir) {
+  const cds = await loadCds(dir);
+  const users = cds.env.for('cds', path.resolve(dir)).requires?.auth?.users ?? {};
+  const csn = await loadCsn(dir);
+  /** @type {Record<string, string>} */
+  const paths = {};
+  for (const [name, def] of Object.entries(csn?.definitions ?? {})) {
+    if (/** @type {any} */ (def).kind !== 'service') continue;
+    const annotated = /** @type {any} */ (def)['@path'];
+    // CAP default: service name without "Service", kebab-case, below /odata/v4/; absolute @path is used as-is.
+    const local = name.split('.').pop() ?? name;
+    const derived = local.replace(/Service$/, '').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+    const p = typeof annotated === 'string' ? annotated : derived;
+    paths[name] = p.startsWith('/') ? p : `/odata/v4/${p}`;
+  }
+  return { users, paths };
+}
+
 /** @param {string} dir */
 async function loadCds(dir) {
   try {

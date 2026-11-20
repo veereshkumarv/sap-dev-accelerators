@@ -12,4 +12,4 @@
  * @typedef {import('./model.js').Operation} Operation
  */
 export { fromEdmx, mergeModels, parseSnapshot, MetadataError } from './model.js';
-export { loadServiceModel, fromCapProject, loadCsn } from './load.js';
+export { loadServiceModel, fromCapProject, loadCsn, loadCapProjectInfo } from './load.js';

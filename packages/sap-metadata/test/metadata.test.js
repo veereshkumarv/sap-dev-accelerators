@@ -12,7 +12,7 @@ import { mkdtemp, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { fromEdmx, loadCsn, loadServiceModel, mergeModels, MetadataError, parseSnapshot } from '../src/index.js';
+import { fromEdmx, loadCapProjectInfo, loadCsn, loadServiceModel, mergeModels, MetadataError, parseSnapshot } from '../src/index.js';
 
 const FIX = fileURLToPath(new URL('./fixtures/', import.meta.url));
 const cap = await loadServiceModel(path.join(FIX, 'cap'));
@@ -96,6 +96,22 @@ test('errors: missing input, invalid EDMX, invalid snapshot, no CDS model, no se
   await assert.rejects(loadServiceModel(noService), /defines no service/);
   await writeFile(path.join(noService, 'db', 'schema.cds'), 'entity {');
   await assert.rejects(loadServiceModel(noService), /does not compile/);
+});
+
+test('loadCapProjectInfo: CAP service paths (default, relative and absolute @path) and users', async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'md-info-'));
+  await import('node:fs/promises').then((fs) => fs.mkdir(path.join(dir, 'srv')));
+  await writeFile(
+    path.join(dir, 'package.json'),
+    JSON.stringify({ name: 'x', cds: { requires: { auth: { kind: 'mocked', users: { zoe: { roles: ['R'] } } } } } }),
+  );
+  await writeFile(
+    path.join(dir, 'srv', 's.cds'),
+    "service SalesOrdersService { entity A { key ID: Integer; } }\n@path: 'custom' service B { entity X { key ID: Integer; } }\n@path: '/abs' service C { entity Y { key ID: Integer; } }",
+  );
+  const info = await loadCapProjectInfo(dir);
+  assert.deepEqual(info.paths, { B: '/odata/v4/custom', C: '/abs', SalesOrdersService: '/odata/v4/sales-orders' });
+  assert.deepEqual(info.users.zoe.roles, ['R']);
 });
 
 test('loadCsn returns the compiled model (used for role derivation)', async () => {

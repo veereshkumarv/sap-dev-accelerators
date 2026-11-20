@@ -1,0 +1,22 @@
+{
+  "//": [
+    "What: Test fixture - CAP app manifest (in-memory SQLite, mocked users alice=Admin, bob=Viewer, eve=no role).",
+    "Why: The generated node:test files are executed against this app to prove they pass for draft, ETag, restricted and operation cases.",
+    "If missing or unlinked: The end-to-end test of odata-testgen cannot start the app and fails."
+  ],
+  "name": "testgen-fixture-app",
+  "private": true,
+  "cds": {
+    "requires": {
+      "db": { "kind": "sqlite", "credentials": { "url": ":memory:" } },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "alice": { "roles": ["Admin"] },
+          "bob": { "roles": ["Viewer"] },
+          "eve": { "roles": [] }
+        }
+      }
+    }
+  }
+}

@@ -26,7 +26,7 @@ quality feedback loops - with one central policy deciding what blocks a release.
 | 2 | CAP clean-core / security lint | [`@sapdx/cap-policy-lint`](packages/cap-policy-lint) | ✅ built, 12 rules, 27 tests |
 | 1 | RAP generator (abapGit output) | [`@sapdx/rap-scaffold`](packages/rap-scaffold) | ✅ built, 24 tests; output verified offline with abaplint (ABAP Cloud), not yet imported into a system |
 | 2 | ABAP clean-core lint (abaplint) | [`@sapdx/abap-policy-lint`](packages/abap-policy-lint) | ✅ built, 17 rules, 10 tests; checks against SAP's released-API list; generated RAP example passes |
-| 3 | OData metadata, API diff, test generator | [`sap-metadata`](packages/sap-metadata), [`odata-diff`](packages/odata-diff), [`odata-testgen`](packages/odata-testgen) | ⏳ planned |
+| 3 | OData metadata, API diff, test generator | [`sap-metadata`](packages/sap-metadata), [`odata-diff`](packages/odata-diff), [`odata-testgen`](packages/odata-testgen) | ✅ built, 8 + 9 + 10 tests; generated tests pass against real CAP apps (node:test 22/22 and 32/32, Newman 30/30) |
 | 4 | S/4HANA mock server | [`@sapdx/s4-mock`](packages/s4-mock) | ⏳ planned |
 | 5 | Transport / deployment readiness (R/A/G) | [`@sapdx/readiness`](packages/readiness) | ⏳ planned |
 
@@ -37,8 +37,10 @@ observability kit, PR bot) are not started.
 
 ## Quick start
 
-Requirements: **Node.js 22 or 24** for the accelerators; **Node.js 24 LTS** for generated CAP
-projects (the CAP 10 HANA deployer requires it, SAP libraries reject Node 26). Git. To import
+Requirements: **Node.js 22 or 24** (`.nvmrc` pins 24; SAP libraries such as `@sap/xsenv` reject
+Node 26, and `engine-strict` stops installs on it); **Node.js 24 LTS** for generated CAP projects
+(the CAP 10 HANA deployer requires it). Without a version manager you can run any command with
+`npx -y -p node@24 -- <command>`. Git. To import
 generated RAP objects: an ABAP Cloud system (BTP ABAP Environment or S/4HANA) with abapGit or gCTS
 (e.g. via Eclipse ADT), and the authorization object named in the model (field `ACTVT`).
 
@@ -65,9 +67,17 @@ npx rap-scaffold --model packages/rap-scaffold/examples/sales-order.yaml --out ~
 # ABAP clean-core gate for an abapGit repository (SAP released-API list downloaded once)
 npx abap-policy-lint update-released-apis --variant btp --out ~/work/zsd-orders/.sapdx/released-apis.json
 npx abap-policy-lint ~/work/zsd-orders
+
+# OData API compatibility: snapshot at release, compare in every pull request
+npx odata-diff snapshot ~/work/sales-orders --out ~/work/sales-orders/api/api-snapshot.json
+npx odata-diff ~/work/sales-orders/api/api-snapshot.json ~/work/sales-orders
+
+# Generate API regression tests (CAP: node:test; deployed RAP/S/4/CAP: Postman for Newman)
+npx odata-testgen --input ~/work/sales-orders --emit node-test
+npx odata-testgen --input metadata.xml --emit postman --roles roles.yaml --base-path /sap/opu/odata4/...
 ```
 
-Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold](packages/rap-scaffold/README.md), [abap-policy-lint](packages/abap-policy-lint/README.md).
+Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold](packages/rap-scaffold/README.md), [abap-policy-lint](packages/abap-policy-lint/README.md), [odata-diff](packages/odata-diff/README.md), [odata-testgen](packages/odata-testgen/README.md), [sap-metadata](packages/sap-metadata/README.md).
 
 ## How the pieces fit
 
@@ -76,8 +86,8 @@ Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold
                                            |
         +------------------+---------------+---------------+---------------------------+
         |                  |                               |                           |
-  create-cap-app     rap-scaffold                  cap-policy-lint            other checkers (planned)
-  (Tool 1, CAP)      (Tool 1, RAP)                 (Tool 2, CAP)              ABAP lint, OData diff, ...
+  create-cap-app     rap-scaffold                  cap-policy-lint            abap-policy-lint (Tool 2)
+  (Tool 1, CAP)      (Tool 1, RAP)                 (Tool 2, CAP)              odata-diff (Tool 3)
   CAP project        abapGit repository            CAP rules -> findings               |
         |            verified with abaplint                |                           |
         |                  |                               +---------- SARIF ----------+
@@ -88,7 +98,8 @@ Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold
 ```
 
 Both generators take their object names from `policy/naming.yaml`, so generated code passes the
-naming rules by construction.
+naming rules by construction. `odata-testgen` (Tool 3) reads the same service model as
+`odata-diff` (via `sap-metadata`) and produces tests rather than findings.
 
 - **One findings format.** Every checker emits SARIF 2.1.0 through `@sapdx/findings`, so results
   merge, show up in GitHub code scanning and feed the gate.
@@ -107,9 +118,9 @@ naming rules by construction.
 | Major | performance risk, missing tests, poor error handling | reported |
 | Minor | naming, documentation, maintainability | reported |
 
-The catalog defines 38 rules (12 CAP, 17 ABAP, 7 OData, 2 policy). CAP rules are implemented in
+The catalog defines 39 rules (12 CAP, 17 ABAP, 8 OData, 2 policy), all implemented: CAP rules in
 `cap-policy-lint`, ABAP rules in `abap-policy-lint` (offline layer; ATC in the system stays
-authoritative), OData rules are specified for the planned `odata-diff`.
+authoritative), OData compatibility rules in `odata-diff`.
 
 **Exemptions** only through [`policy/exemptions.yaml`](policy/exemptions.yaml): owner, justification
 (>= 20 characters), approving architect who is not the owner, expiry within 12 months, backlog
@@ -130,7 +141,10 @@ packages/
   create-cap-app/           Tool 1 (CAP): src/, templates/ (overlay), test/
   rap-scaffold/             Tool 1 (RAP): src/, examples/ (model + committed output), test/
   abap-policy-lint/         Tool 2 (ABAP): rules, released-API catalogue, shared abaplint setup
-  sap-metadata/ ...         planned tools (skeletons)
+  sap-metadata/             Tool 3: normalised OData service model (EDMX V2/V4, CAP, snapshot)
+  odata-diff/               Tool 3: breaking-change detection, API snapshots
+  odata-testgen/            Tool 3: node:test and Postman test generation
+  s4-mock/, readiness/      planned tools (skeletons)
 reference-apps/sales-orders committed output of create-cap-app, verified in CI
 scripts/                    repo guardrails: file-header check, workspace check
 docs/GUARDRAILS.md          binding clean-core and engineering rules
