@@ -105,6 +105,10 @@ function faultMiddleware({ rules = [], random = Math.random, maxDelayMs = 30_000
   return async (/** @type {any} */ req, /** @type {any} */ res, /** @type {() => void} */ next) => {
     const url = req.originalUrl ?? req.url;
     if (!ODATA_PATH.test(url)) return next();
+    // The V2 adapter forwards V2 calls to the V4 endpoint over HTTP with the same headers: handle
+    // each client request once (on its V2 path) and let the forwarded call through untouched.
+    if (req.headers['x-mock-handled']) return next();
+    req.headers['x-mock-handled'] = '1';
     const delay = Math.min(Number(req.headers['x-mock-delay-ms']) || 0, maxDelayMs);
     if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
     const fault = pickFault(req, rules, random);

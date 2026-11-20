@@ -40,7 +40,9 @@ module.exports = class API_SALES_ORDER_SRV extends cds.ApplicationService {
       order.TotalNetAmount = total;
     });
 
-    this.after('CREATE', A_SalesOrder, async (order) => {
+    // The result argument of after('CREATE') is not the record in CAP 10; req.data holds the order.
+    this.after('CREATE', A_SalesOrder, async (_result, req) => {
+      const order = req.data;
       LOG.info('sales order created', { SalesOrder: order.SalesOrder, creditCheck: order.TotalCreditCheckStatus });
       const webhook = cds.env.s4mock?.webhook;
       if (webhook) {

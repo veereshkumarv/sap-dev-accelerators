@@ -22,6 +22,7 @@ const EXCEPTIONS = [
   { pattern: /^\.nvmrc$/, reason: 'version managers read the single line verbatim; documented in README' },
   { pattern: /(^|\/)reference-apps\/[^/]+\/xs-security\.json$/, reason: 'XSUAA descriptor; documented in the app docs/files.md' },
   { pattern: /^packages\/rap-scaffold\/examples\/out\/.*\.xml$/, reason: 'abapGit XML metadata is regenerated on export; documented in examples/out/docs/files.md' },
+  { pattern: /^packages\/s4-mock\/db\/data\/.*\.csv$/, reason: "CAP's CSV loader reads every line as data; documented in packages/s4-mock/README.md" },
 ];
 const BINARY = /\.(png|jpe?g|gif|ico|pdf|zip|mtar|sqlite|db)$/i;
 const HEADER_WINDOW_LINES = 40;

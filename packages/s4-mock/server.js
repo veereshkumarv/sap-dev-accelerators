@@ -10,7 +10,8 @@ const express = require('express');
 const { emitEvent } = require('./src/events');
 const { faultMiddleware, parseRules } = require('./src/faults');
 
-cds.on('bootstrap', (app) => {
+// prependListener: run before the OData V2 adapter plugin, so faults hit V2 paths in S/4 format.
+cds.prependListener('bootstrap', (app) => {
   const options = cds.env.s4mock ?? {};
   app.use(faultMiddleware({ rules: parseRules(options.faults ?? process.env.S4MOCK_FAULTS), maxDelayMs: options.maxDelayMs ?? 30_000 }));
 

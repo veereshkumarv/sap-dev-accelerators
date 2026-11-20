@@ -7,3 +7,5 @@
  */
 // @sap/cds ships no bundled type declarations; treat it as untyped at the boundary.
 declare module '@sap/cds';
+// Programmatic "cds serve" used by the S/4 mock's start().
+declare module '@sap/cds/bin/serve';

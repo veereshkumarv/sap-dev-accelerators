@@ -20,6 +20,7 @@ const V4 = '/odata/v4';
 
 /** Raw fetch against the running mock (headers and status fully visible). */
 async function call(path, { method = 'GET', user = S4USER, headers = {}, body } = {}) {
+  // user: null = anonymous (undefined would fall back to the default user).
   const auth = user ? { authorization: `Basic ${Buffer.from(`${user.username}:${user.password}`).toString('base64')}` } : {};
   const res = await fetch(`${test.url}${path}`, {
     method,
@@ -64,7 +65,7 @@ describe('reads and authorization', () => {
   });
 
   it('rejects anonymous requests with 401 and read-only users on writes with 403', async () => {
-    assert.equal((await call(`${V4}/API_SALES_ORDER_SRV/A_SalesOrder`, { user: undefined })).status, 401);
+    assert.equal((await call(`${V4}/API_SALES_ORDER_SRV/A_SalesOrder`, { user: null })).status, 401);
     const readonly = { username: 'READONLY', password: 'mock' };
     assert.equal((await call(`${V4}/API_SALES_ORDER_SRV/A_SalesOrder`, { user: readonly })).status, 200);
     assert.equal((await call(`${V4}/API_SALES_ORDER_SRV/A_SalesOrder`, { method: 'POST', user: readonly, body: order() })).status, 403);

@@ -27,7 +27,7 @@ quality feedback loops - with one central policy deciding what blocks a release.
 | 1 | RAP generator (abapGit output) | [`@sapdx/rap-scaffold`](packages/rap-scaffold) | ✅ built, 24 tests; output verified offline with abaplint (ABAP Cloud), not yet imported into a system |
 | 2 | ABAP clean-core lint (abaplint) | [`@sapdx/abap-policy-lint`](packages/abap-policy-lint) | ✅ built, 17 rules, 10 tests; checks against SAP's released-API list; generated RAP example passes |
 | 3 | OData metadata, API diff, test generator | [`sap-metadata`](packages/sap-metadata), [`odata-diff`](packages/odata-diff), [`odata-testgen`](packages/odata-testgen) | ✅ built, 8 + 9 + 10 tests; generated tests pass against real CAP apps (node:test 22/22 and 32/32, Newman 30/30) |
-| 4 | S/4HANA mock server | [`@sapdx/s4-mock`](packages/s4-mock) | ⏳ planned |
+| 4 | S/4HANA mock server | [`@sapdx/s4-mock`](packages/s4-mock) | ✅ built, 29 tests; V2/V4 on the real S/4 paths, sales order behaviour, fault injection, CloudEvents |
 | 5 | Transport / deployment readiness (R/A/G) | [`@sapdx/readiness`](packages/readiness) | ⏳ planned |
 
 Planned packages exist as skeletons (manifest and folders only). The workspace guardrail makes
@@ -75,9 +75,13 @@ npx odata-diff ~/work/sales-orders/api/api-snapshot.json ~/work/sales-orders
 # Generate API regression tests (CAP: node:test; deployed RAP/S/4/CAP: Postman for Newman)
 npx odata-testgen --input ~/work/sales-orders --emit node-test
 npx odata-testgen --input metadata.xml --emit postman --roles roles.yaml --base-path /sap/opu/odata4/...
+
+# Local S/4HANA stand-in (Business Partner, Sales Order, Product APIs; faults on demand)
+npx s4-mock --port 4005
+curl -u S4USER:mock -H "x-mock-fault: 429" http://localhost:4005/sap/opu/odata/sap/API_SALES_ORDER_SRV/A_SalesOrder
 ```
 
-Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold](packages/rap-scaffold/README.md), [abap-policy-lint](packages/abap-policy-lint/README.md), [odata-diff](packages/odata-diff/README.md), [odata-testgen](packages/odata-testgen/README.md), [sap-metadata](packages/sap-metadata/README.md).
+Tool details: [create-cap-app](packages/create-cap-app/README.md), [rap-scaffold](packages/rap-scaffold/README.md), [abap-policy-lint](packages/abap-policy-lint/README.md), [odata-diff](packages/odata-diff/README.md), [odata-testgen](packages/odata-testgen/README.md), [sap-metadata](packages/sap-metadata/README.md), [s4-mock](packages/s4-mock/README.md).
 
 ## How the pieces fit
 
@@ -144,7 +148,8 @@ packages/
   sap-metadata/             Tool 3: normalised OData service model (EDMX V2/V4, CAP, snapshot)
   odata-diff/               Tool 3: breaking-change detection, API snapshots
   odata-testgen/            Tool 3: node:test and Postman test generation
-  s4-mock/, readiness/      planned tools (skeletons)
+  s4-mock/                  Tool 4: S/4HANA API mock (CAP app: db/, srv/, server.js, src/)
+  readiness/                planned tool (skeleton)
 reference-apps/sales-orders committed output of create-cap-app, verified in CI
 scripts/                    repo guardrails: file-header check, workspace check
 docs/GUARDRAILS.md          binding clean-core and engineering rules

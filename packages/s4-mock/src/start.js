@@ -15,7 +15,7 @@ const ROOT = path.resolve(__dirname, '..');
  * @typedef {object} StartOptions
  * @property {number} [port]       0 = random free port (default 4005)
  * @property {boolean} [auth]      false = no authentication (all requests privileged)
- * @property {number} [pageSize]   server-driven paging size (__next / @odata.nextLink)
+ * @property {number} [pageSize]   server-driven paging size (V2 __next, V4 nextLink)
  * @property {string} [webhook]    URL that receives CloudEvents
  * @property {string} [faults]     JSON array of fault rules
  */
@@ -35,12 +35,17 @@ async function start(options = {}) {
   cds.env.s4mock = { ...cds.env.s4mock, ...s4mock };
   if (options.auth === false) cds.env.requires.auth = { kind: 'dummy' };
   const serve = require('@sap/cds/bin/serve');
-  const server = await serve([], { project: ROOT, port: options.port ?? 4005, 'in-memory?': true });
-  const address = /** @type {import('node:net').AddressInfo} */ (server.address());
+  // cds serve resolves to { server, url } once the server listens.
+  const { server, url } = await serve([], { project: ROOT, port: options.port ?? 4005, 'in-memory?': true });
   return {
-    url: `http://localhost:${address.port}`,
+    url,
     server,
-    close: () => new Promise((resolve, reject) => server.close((err) => (err ? reject(err) : resolve()))),
+    close: () =>
+      new Promise((resolve, reject) => {
+        // Keep-alive client connections would otherwise keep the server (and the process) alive.
+        server.closeAllConnections();
+        server.close((/** @type {Error | undefined} */ err) => (err ? reject(err) : resolve()));
+      }),
   };
 }
 

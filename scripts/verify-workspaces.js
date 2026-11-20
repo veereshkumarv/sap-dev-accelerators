@@ -68,11 +68,17 @@ async function unreachableSources(dir, entries) {
     if (seen.has(file)) continue;
     seen.add(file);
     let text;
-    try {
-      text = await readFile(file, 'utf8');
-    } catch {
-      continue;
+    // CommonJS requires may omit the extension or point at a folder.
+    for (const candidate of [file, `${file}.js`, path.join(file, 'index.js')]) {
+      try {
+        text = await readFile(candidate, 'utf8');
+        seen.add(candidate);
+        break;
+      } catch {
+        // try next candidate
+      }
     }
+    if (text === undefined) continue;
     for (const m of text.matchAll(/(?:from\s+|import\s*\(\s*|require\s*\(\s*)['"](\.{1,2}\/[^'"]+)['"]/g)) {
       queue.push(path.resolve(path.dirname(file), m[1]));
     }

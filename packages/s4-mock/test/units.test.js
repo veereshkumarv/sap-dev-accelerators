@@ -71,9 +71,9 @@ describe('programmatic start', () => {
     try {
       const v4 = await (await fetch(`${mock.url}/odata/v4/API_BUSINESS_PARTNER/A_BusinessPartner`)).json();
       assert.equal(v4.value.length, 2);
-      assert.match(v4['@odata.nextLink'], /\$skiptoken=/);
+      assert.match(v4['@odata.nextLink'], /(\$|%24)skiptoken=2/);
       const v2 = await (await fetch(`${mock.url}/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner?$format=json`)).json();
-      assert.match(v2.d.__next, /skiptoken/);
+      assert.match(v2.d.__next, /\$skiptoken=2/);
       assert.equal((await fetch(`${mock.url}/odata/v4/API_PRODUCT_SRV/A_ProductDescription`)).status, 503);
       assert.equal((await fetch(`${mock.url}/odata/v4/API_PRODUCT_SRV/A_ProductDescription`)).status, 200, 'rule fired once');
       assert.equal((await (await fetch(`${mock.url}/mock/health`)).json()).status, 'UP');

@@ -45,4 +45,9 @@ export default [
     files: ['**/*.cjs'],
     languageOptions: { sourceType: 'commonjs' },
   },
+  {
+    // CAP service handlers use CAP's global query builders.
+    files: ['packages/s4-mock/srv/**/*.js'],
+    languageOptions: { globals: { SELECT: 'readonly', INSERT: 'readonly', UPSERT: 'readonly', UPDATE: 'readonly', DELETE: 'readonly' } },
+  },
 ];
