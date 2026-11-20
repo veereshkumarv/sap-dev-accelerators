@@ -1,0 +1,37 @@
+# What: Release-readiness policy: which evidence is mandatory per deployment target and the
+#     thresholds the readiness checker applies (coverage, tests, vulnerabilities, change records).
+# Why: One central definition of "ready for DEV / QA / PROD", applied identically to every CAP and
+#     RAP delivery; stricter targets get stricter rules.
+# If missing or unlinked: sapdx-readiness falls back to no mandatory checks and cannot decide
+#     Red/Amber/Green reliably (it stops with a configuration error).
+
+version: 1
+
+thresholds:
+  minTests: 1
+  changeRecordPattern: '^(CHG|CR|RFC)[0-9]{5,}$'
+  vulnerabilities:
+    fail: [critical, high]
+    warn: [moderate]
+
+targets:
+  DEV:
+    mandatory: [RDY-FINDINGS, RDY-TESTS]
+    coverage: { min: 60, warn: 80 }
+  QA:
+    mandatory: [RDY-FINDINGS, RDY-TESTS, RDY-COVERAGE, RDY-SECRETS, RDY-DEPS, RDY-DESCRIPTOR, RDY-API-COMPAT, RDY-CHANGE-RECORD]
+    coverage: { min: 80, warn: 85 }
+  PROD:
+    mandatory:
+      - RDY-FINDINGS
+      - RDY-TESTS
+      - RDY-CONTRACT
+      - RDY-COVERAGE
+      - RDY-SECRETS
+      - RDY-DEPS
+      - RDY-DESCRIPTOR
+      - RDY-API-COMPAT
+      - RDY-CHANGE-RECORD
+      - RDY-ROLLBACK
+      - RDY-PROD-CONFIG
+    coverage: { min: 80, warn: 90 }

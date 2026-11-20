@@ -1,0 +1,198 @@
+{
+  "$comment": "What: cap-policy-lint findings for the reference app (SARIF 2.1.0). Why: Example RDY-FINDINGS evidence; any SARIF file in the evidence folder is gated centrally. If missing or unlinked: RDY-FINDINGS reports \"missing\" and the example turns Red.",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "cap-policy-lint",
+          "version": "0.1.0",
+          "rules": [
+            {
+              "id": "CAP-API-001",
+              "shortDescription": {
+                "text": "API ownership metadata missing"
+              },
+              "fullDescription": {
+                "text": "catalog-info.yaml must declare owner, lifecycle and API version."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "severity": "minor"
+              }
+            },
+            {
+              "id": "CAP-AUTH-001",
+              "shortDescription": {
+                "text": "Service exposed without authorization"
+              },
+              "fullDescription": {
+                "text": "Every service must declare @requires or @restrict. Use @requires:'any' only with an exemption."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "severity": "critical"
+              }
+            },
+            {
+              "id": "CAP-AUTH-002",
+              "shortDescription": {
+                "text": "Writable entity without access restriction"
+              },
+              "fullDescription": {
+                "text": "Entities that accept CREATE/UPDATE/DELETE must be covered by @restrict, a business role in @requires (pseudo roles such as authenticated-user do not count), or be @readonly."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "severity": "critical"
+              }
+            },
+            {
+              "id": "CAP-CFG-001",
+              "shortDescription": {
+                "text": "Hard-coded URL"
+              },
+              "fullDescription": {
+                "text": "Endpoints belong in destinations / cds.requires configuration, not in handler code."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "severity": "major"
+              }
+            },
+            {
+              "id": "CAP-CFG-002",
+              "shortDescription": {
+                "text": "Hard-coded organisational value"
+              },
+              "fullDescription": {
+                "text": "Company codes, plants, sales organisations etc. must come from configuration or master data."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "severity": "major"
+              }
+            },
+            {
+              "id": "CAP-LOG-001",
+              "shortDescription": {
+                "text": "console logging"
+              },
+              "fullDescription": {
+                "text": "Use cds.log() for structured, correlation-aware logging."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "severity": "minor"
+              }
+            },
+            {
+              "id": "CAP-NAME-001",
+              "shortDescription": {
+                "text": "Naming convention violated"
+              },
+              "fullDescription": {
+                "text": "Namespace, service and entity names must follow policy/naming.yaml."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "severity": "minor"
+              }
+            },
+            {
+              "id": "CAP-PERF-001",
+              "shortDescription": {
+                "text": "Unbounded query"
+              },
+              "fullDescription": {
+                "text": "SELECT without where/limit/one on a persistent entity in handler code."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "severity": "major"
+              }
+            },
+            {
+              "id": "CAP-REMOTE-001",
+              "shortDescription": {
+                "text": "Remote service without destination"
+              },
+              "fullDescription": {
+                "text": "Production profile of a remote service must use a destination (credentials.destination), never inline URLs or users."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "severity": "major"
+              }
+            },
+            {
+              "id": "CAP-SEC-001",
+              "shortDescription": {
+                "text": "Hard-coded secret"
+              },
+              "fullDescription": {
+                "text": "Credentials, tokens or client secrets in source. Use service bindings, destinations or credential store."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "severity": "blocker"
+              }
+            },
+            {
+              "id": "CAP-TEST-001",
+              "shortDescription": {
+                "text": "Custom operation without test"
+              },
+              "fullDescription": {
+                "text": "Every action/function must be referenced by at least one test."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "severity": "major"
+              }
+            },
+            {
+              "id": "CAP-TEST-002",
+              "shortDescription": {
+                "text": "No negative authorization test"
+              },
+              "fullDescription": {
+                "text": "Project must contain at least one test asserting 401/403 for an unauthorized user."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "severity": "major"
+              }
+            }
+          ]
+        }
+      },
+      "results": []
+    }
+  ]
+}

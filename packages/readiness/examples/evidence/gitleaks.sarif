@@ -1,0 +1,11 @@
+{
+  "$comment": "What: Secret scan result in gitleaks SARIF format (gitleaks git --report-format sarif). Why: Example RDY-SECRETS evidence; files named gitleaks*/secret* feed the secrets check instead of the findings gate. If missing or unlinked: RDY-SECRETS reports \"missing\" and the QA/PROD example turns Red.",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": { "driver": { "name": "gitleaks", "semanticVersion": "8.28.0", "informationUri": "https://github.com/gitleaks/gitleaks", "rules": [] } },
+      "results": []
+    }
+  ]
+}

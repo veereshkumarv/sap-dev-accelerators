@@ -1,0 +1,10 @@
+{
+  "$comment": "What: odata-diff JSON report comparing the released API snapshot with the current reference app. Why: Example RDY-API-COMPAT evidence: no breaking changes. If missing or unlinked: RDY-API-COMPAT reports \"missing\" and the QA/PROD example turns Red.",
+  "tool": "odata-diff",
+  "recommendation": "patch",
+  "breaking": 0,
+  "breakingExempted": 0,
+  "additive": 0,
+  "gate": "passed",
+  "findings": []
+}

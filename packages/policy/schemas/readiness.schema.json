@@ -1,0 +1,63 @@
+{
+  "$id": "https://sapdx.local/schemas/readiness.schema.json",
+  "$comment": "What: JSON Schema for policy/readiness.yaml (targets, mandatory checks, coverage and vulnerability thresholds, change-record pattern). Why: A typo in a check id or threshold must fail at load time instead of silently weakening a release gate. If missing or unlinked: readiness.yaml is loaded without validation; unknown check ids would be ignored and targets could become less strict unnoticed.",
+  "type": "object",
+  "required": ["version", "targets"],
+  "additionalProperties": false,
+  "definitions": {
+    "check": {
+      "enum": [
+        "RDY-FINDINGS",
+        "RDY-TESTS",
+        "RDY-CONTRACT",
+        "RDY-COVERAGE",
+        "RDY-DEPS",
+        "RDY-SECRETS",
+        "RDY-DESCRIPTOR",
+        "RDY-API-COMPAT",
+        "RDY-DB-MIGRATION",
+        "RDY-ROLLBACK",
+        "RDY-CHANGE-RECORD",
+        "RDY-PROD-CONFIG",
+        "RDY-TRANSPORT"
+      ]
+    },
+    "percent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "severityList": { "type": "array", "items": { "enum": ["critical", "high", "moderate", "low", "info"] } }
+  },
+  "properties": {
+    "version": { "const": 1 },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minTests": { "type": "integer", "minimum": 0 },
+        "changeRecordPattern": { "type": "string", "format": "regex" },
+        "vulnerabilities": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "fail": { "$ref": "#/definitions/severityList" }, "warn": { "$ref": "#/definitions/severityList" } }
+        }
+      }
+    },
+    "targets": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[A-Z][A-Z0-9_]*$" },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["mandatory"],
+        "additionalProperties": false,
+        "properties": {
+          "mandatory": { "type": "array", "items": { "$ref": "#/definitions/check" }, "uniqueItems": true },
+          "coverage": {
+            "type": "object",
+            "required": ["min"],
+            "additionalProperties": false,
+            "properties": { "min": { "$ref": "#/definitions/percent" }, "warn": { "$ref": "#/definitions/percent" } }
+          }
+        }
+      }
+    }
+  }
+}

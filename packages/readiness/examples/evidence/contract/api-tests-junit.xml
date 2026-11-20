@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+What: API contract test results: odata-testgen generated tests run against the reference app (JUnit).
+Why: Example RDY-CONTRACT evidence; the "contract"/"api-tests" path marks it as contract tests.
+If missing or unlinked: RDY-CONTRACT reports "missing" and the PROD example turns Red.
+-->
+<testsuites>
+	<testsuite name="SalesOrdersService.SalesOrderItems (generated)" time="0.530189" disabled="0" errors="0" tests="10" failures="0" skipped="0" timestamp="2026-11-20T06:06:57.070Z" hostname="ci-runner">
+		<testcase name="rejects anonymous access with 401" time="0.041635" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="reads the collection with $top and $count as alice" time="0.012018" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="supports $filter and $orderby on product" time="0.006098" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="forbids read for carol with 403" time="0.005515" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="creates an entity and reads it back" time="0.019473" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="rejects missing mandatory fields (product) with 400" time="0.002487" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="rejects an invalid Edm.Int32 value for quantity with 400" time="0.019349" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="forbids create for bob with 403" time="0.002807" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="updates an entity" time="0.006517" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+		<testcase name="deletes an entity" time="0.004071" classname="SalesOrdersService.SalesOrderItems (generated)" file="test/generated/SalesOrdersService.SalesOrderItems.test.js"/>
+	</testsuite>
+	<testsuite name="SalesOrdersService.SalesOrders (generated)" time="0.506622" disabled="0" errors="0" tests="12" failures="0" skipped="0" timestamp="2026-11-20T06:06:57.266Z" hostname="ci-runner">
+		<testcase name="rejects anonymous access with 401" time="0.041682" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="reads the collection with $top and $count as alice" time="0.012739" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="supports $filter and $orderby on customer" time="0.005407" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="forbids read for carol with 403" time="0.006021" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="creates an entity and reads it back" time="0.022259" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="rejects missing mandatory fields (customer, description) with 400" time="0.003207" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="rejects an invalid Edm.Decimal value for netAmount with 400" time="0.001732" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="forbids create for bob with 403" time="0.001661" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="updates an entity" time="0.006860" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="deletes an entity" time="0.005405" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="action cancel is reachable for alice (smoke)" time="0.005033" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+		<testcase name="action cancel is forbidden for bob with 403" time="0.003846" classname="SalesOrdersService.SalesOrders (generated)" file="test/generated/SalesOrdersService.SalesOrders.test.js"/>
+	</testsuite>
+	<!-- tests 22 -->
+	<!-- suites 2 -->
+	<!-- pass 22 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 1022.668667 -->
+</testsuites>

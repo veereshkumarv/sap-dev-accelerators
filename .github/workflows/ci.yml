@@ -70,6 +70,26 @@ jobs:
         with:
           sarif_file: cap.sarif
           category: cap-reference-app
+      # Fresh evidence from this run; the secret scan (security job) and the API diff (no previous
+      # release of the reference app exists) are taken from the committed readiness example.
+      # Generated contract tests go to test/generated (they import the app's @sap/cds).
+      - name: Release readiness of the reference app (QA rules)
+        working-directory: reference-apps/sales-orders
+        run: |
+          E="$RUNNER_TEMP/evidence"; mkdir -p "$E/contract"
+          cp ../../packages/readiness/examples/evidence/{evidence.yaml,rollback.md,gitleaks.sarif,api-diff.json} "$E/"
+          sed -i.bak "s#^project: .*#project: $PWD#" "$E/evidence.yaml" && rm "$E/evidence.yaml.bak"
+          node --test --experimental-test-coverage --test-coverage-include="srv/**" --test-coverage-include=server.js \
+            --test-reporter=junit --test-reporter-destination="$E/junit.xml" \
+            --test-reporter=lcov --test-reporter-destination="$E/lcov.info" "test/*.test.js"
+          node ../../packages/odata-testgen/bin/odata-testgen.js --input . --emit node-test
+          node --test --test-reporter=junit --test-reporter-destination="$E/contract/api-tests-junit.xml" "test/generated/*.test.js"
+          node ../../packages/cap-policy-lint/bin/cap-policy-lint.js . --format sarif --out "$E/cap-policy.sarif"
+          npm audit --omit=dev --json > "$E/npm-audit.json" || true
+          node ../../packages/readiness/bin/readiness.js check --evidence "$E" --target QA --format markdown --out "$RUNNER_TEMP/readiness.md"
+      - name: Readiness report in the job summary
+        if: always()
+        run: cat "$RUNNER_TEMP/readiness.md" >> "$GITHUB_STEP_SUMMARY" || true
 
   rap-example:
     name: RAP generator output is reproducible and verified

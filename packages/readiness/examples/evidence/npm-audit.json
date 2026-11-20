@@ -1,0 +1,9 @@
+{
+  "$comment": "What: Dependency audit in npm audit --json format (auditReportVersion 2), summary only. Why: Example RDY-DEPS evidence; the checker reads metadata.vulnerabilities. In CI write it with: npm audit --omit=dev --json > evidence/npm-audit.json. If missing or unlinked: RDY-DEPS reports \"missing\" and the QA/PROD example turns Red.",
+  "auditReportVersion": 2,
+  "vulnerabilities": {},
+  "metadata": {
+    "vulnerabilities": { "info": 0, "low": 0, "moderate": 0, "high": 0, "critical": 0, "total": 0 },
+    "dependencies": { "prod": 178, "dev": 0, "optional": 0, "peer": 0, "peerOptional": 0, "total": 178 }
+  }
+}

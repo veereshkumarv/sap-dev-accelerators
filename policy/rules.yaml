@@ -218,3 +218,58 @@ rules:
     title: Additive API change
     severity: minor
     tool: odata-diff
+
+  # ---------------------------------------------------------------- Release readiness
+  # Severity of a failed readiness check; Blocker/Critical make the release decision Red.
+  - id: RDY-FINDINGS
+    title: New Blocker/Critical quality findings
+    severity: critical
+    tool: readiness
+  - id: RDY-TESTS
+    title: Unit or integration tests failing or missing
+    severity: critical
+    tool: readiness
+  - id: RDY-CONTRACT
+    title: API contract tests failing or missing
+    severity: critical
+    tool: readiness
+  - id: RDY-COVERAGE
+    title: Test coverage below threshold
+    severity: critical
+    tool: readiness
+  - id: RDY-DEPS
+    title: High or critical dependency vulnerabilities
+    severity: critical
+    tool: readiness
+  - id: RDY-SECRETS
+    title: Secrets committed
+    severity: blocker
+    tool: readiness
+  - id: RDY-DESCRIPTOR
+    title: Deployment descriptor invalid or contains credentials
+    severity: critical
+    tool: readiness
+  - id: RDY-API-COMPAT
+    title: Breaking API change without major version
+    severity: critical
+    tool: readiness
+  - id: RDY-DB-MIGRATION
+    title: Destructive database change without migration plan
+    severity: critical
+    tool: readiness
+  - id: RDY-ROLLBACK
+    title: Rollback or roll-forward procedure missing
+    severity: major
+    tool: readiness
+  - id: RDY-CHANGE-RECORD
+    title: Change record missing or invalid
+    severity: major
+    tool: readiness
+  - id: RDY-PROD-CONFIG
+    title: Development settings in the production profile
+    severity: critical
+    tool: readiness
+  - id: RDY-TRANSPORT
+    title: Transport predecessors not imported in the target
+    severity: critical
+    tool: readiness

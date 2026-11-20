@@ -1,0 +1,15 @@
+# What: Release manifest of the example PROD delivery of reference-apps/sales-orders: version,
+#     change record, rollback procedure, project location and database migration statement.
+# Why: Evidence no tool produces (change record, rollback plan, migration statement) is declared
+#     here so sapdx-readiness can check it; also the documented example for teams.
+# If missing or unlinked: RDY-CHANGE-RECORD, RDY-ROLLBACK, RDY-DESCRIPTOR and RDY-PROD-CONFIG
+#     report "missing" and the example turns Red.
+
+version: 1.0.0
+previousVersion: 0.9.0
+changeRecord: CHG0012345
+rollback: rollback.md
+project: ../../../../reference-apps/sales-orders
+
+dbMigration:
+  destructive: false
